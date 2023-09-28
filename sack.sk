@@ -83,7 +83,6 @@ on player picking up:
     set {_CustomModelData} to custom model data of player's offhand item
     set {_CustomModelData} to "%{_CustomModelData}%"
     if custom model data of event-item is 0:
-        message "%custom model data of event-item%" to console
         if {_CustomModelData} start with "1600":
             if {_CustomModelData} end with "1":
                 set {_item_limit} to 256
@@ -122,5 +121,3 @@ on player picking up:
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
-    else:
-        message "%custom model data of event-item%" to console

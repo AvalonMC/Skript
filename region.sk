@@ -2,12 +2,11 @@ on load:
     set {!world} to "plugins/WorldGuard/worlds/world/regions.yml"
     set {!nether} to "plugins/WorldGuard/worlds/world_nether/regions.yml"
     set {!end} to "plugins/WorldGuard/worlds/world_the_end/regions.yml"
-	set {!coords_x::*} to 0, 10, -10, 0, 0, 10,-10, 0, 0, 0, 0, 0, 20,-20, 0, 0, 20,-20, 0, 0, 0, 0, 0, 30, -30, 0, 0, 30, -30, 0, 0, 0, 0, 0, 40, -40, 0, 0, 40, -40, 0, 0, 0 and 0
-	set {!coords_y::*} to 0, 10, 10, 10, 10, 0, 0, -10, 10, 0, 0, 0, 20, -20, 20, 20, 0, 0, -20, 20, 0, 0, 0, 30, 30, 30, 30, 0, 0,-30, 30, 0, 0, 0, 40,-40, 40, 40, 0, 0,-40, 40, 0 and 0
-	set {!coords_z::*} to 0, 0, 0, 10, -10, 0, 0, 0, 0, 10,-10, 0, 0, 0, 20, -20, 0, 0, 0, 0, 20, -20, 0, 0, 0, 30, -30, 0, 0, 0, 0, 30, -30, 0, 0, 0, 40, -40, 0, 0, 0, 0, 40 and -40
+    set {!coords_x::*} to 0, 10, -10, 0, 0, 10,-10, 0, 0, 0, 0, 0, 20,-20, 0, 0, 20,-20, 0, 0, 0, 0, 0, 30, -30, 0, 0, 30, -30, 0, 0, 0, 0, 0, 40, -40, 0, 0, 40, -40, 0, 0, 0 and 0
+    set {!coords_y::*} to 0, 10, 10, 10, 10, 0, 0, -10, 10, 0, 0, 0, 20, -20, 20, 20, 0, 0, -20, 20, 0, 0, 0, 30, 30, 30, 30, 0, 0,-30, 30, 0, 0, 0, 40,-40, 40, 40, 0, 0,-40, 40, 0 and 0
+    set {!coords_z::*} to 0, 0, 0, 10, -10, 0, 0, 0, 0, 10,-10, 0, 0, 0, 20, -20, 0, 0, 0, 0, 20, -20, 0, 0, 0, 30, -30, 0, 0, 0, 0, 30, -30, 0, 0, 0, 40, -40, 0, 0, 0, 0, 40 and -40
 
 function getRegionsAmount(playerName: player) :: number:
-    #set {_executionTime} to system millis
     set {_playerUUID} to uuid of {_playerName}
     if file {world} doesn't exist:
         message "Regions file of world is missing!" to console
@@ -35,7 +34,6 @@ function getRegionsAmount(playerName: player) :: number:
             if {_region::1} partially match {_playerUUID}:
                 set {_playerRegionsCount} to {_playerRegionsCount} + 1
                 
-    #message "Get number of all regions of %{_playerName}% took %system millis - {_executionTime}%ms" to console
     return {_playerRegionsCount}
 
 command /get_regions_of_player <player>:

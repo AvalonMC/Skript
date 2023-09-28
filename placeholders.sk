@@ -10,11 +10,11 @@ on placeholderapi placeholder request for the prefix "font":
 
 on placeholderapi placeholder request for the prefix "sack":
     if {!sack_mining::*} contains identifier:
-        set the result to getSscore(player, "sack.%identifier%")
+        set the result to getSscore("%player%", "sack.%identifier%")
     else if {!sack_farming::*} contains identifier:
-        set the result to getSscore(player, "sack.%identifier%")
+        set the result to getSscore("%player%", "sack.%identifier%")
     else if {!sack_hunting::*} contains identifier:
-        set the result to getSscore(player, "sack.%identifier%")
+        set the result to getSscore("%player%", "sack.%identifier%")
     else:
         set the result to "None"
 
