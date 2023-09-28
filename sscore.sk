@@ -10,32 +10,36 @@ on tab complete of "/sscore":
         set tab completions for position 2 to "number"
     set tab completions for position 3 to all players
 
+function getSscore(playerName: player, identifier: string) :: string:
+    if yml {_identifier} in file "plugins/Skript/scripts/players/%{_playerName}%.yml" doesn't exist:
+        return "0"
+    else:
+        set {_return} to yml value {_identifier} from file "plugins/Skript/scripts/players/%{_playerName}%.yml"
+        return "%{_return}%"
+
 command /sscore <text> <text> <player> <text> [<text>]:
     permission: group.admin
     description: YAML-based scores
     trigger:
-        set {_executionTime} to system millis
+        #set {_executionTime} to system millis
         if arg-1 matches "get":
             if arg-2 matches "list":
                 message yml list arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to command executor
             else:
-                message yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to command executor
+                message getSscore(arg-3, arg-4) to command executor
         else if arg-1 matches "set":
             if arg-2 matches "number":
                 set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5 parsed as number
             else if arg-2 matches "string":
                 set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5
         else if arg-1 matches "add":
-            if yml arg-4 in file "plugins/Skript/scripts/players/%arg-3%.yml" exists:
-                set {_prevValue} to yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml"
-            set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} + arg-5 parsed as number
+            set {_prevValue} to getSscore(arg-3, arg-4)
+            set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} parsed as number + arg-5 parsed as number
         else if arg-1 matches "remove":
-            if yml arg-4 in file "plugins/Skript/scripts/players/%arg-3%.yml" exists:
-                set {_prevValue} to yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml"
-            set {_prevValue} to yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml"
-            set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} - arg-5 parsed as number
+            set {_prevValue} to getSscore(arg-3, arg-4) parsed as number
+            set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} parsed as number - arg-5 parsed as number
         else if arg-1 matches "delete":
             delete yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml"
         else:
             message "Wrong argument %arg-1%" to command executor
-        message "Executed %arg-1% sscore %arg-4% for %arg-3% (%system millis - {_executionTime}%ms)" to console
+        #message "Executed %arg-1% sscore %arg-4% for %arg-3% (%system millis - {_executionTime}%ms)" to console

@@ -1,10 +1,12 @@
 on load:
     set {!sack_mining::*} to "stone", "cobblestone", "deepslate", "cobbled_deepslate", "diorite", "granite", "andesite", "tuff", "calcite", "sand", "sandstone", "red_sand", "red_sandstone", "gravel", "prismarine", "ice", "grass_block", "podzol", "mycelium", "dirt", "moss_block", "mud", "dripstone_block", "brown_terracotta", "red_terracotta", "orange_terracotta", "terracotta", "light_gray_terracotta", "yellow_terracotta", "white_terracotta", "sponge", "wet_sponge", "coal", "raw_copper", "copper_ingot", "raw_iron", "iron_ingot", "raw_gold", "gold_ingot", "diamond", "redstone", "sculk", "snowball", "clay_ball", "prismarine_shard", "prismarine_crystals", "amethyst_shard", "emerald", "lapis_lazuli", "flint", "netherrack", "soul_sand", "soul_soil", "blackstone", "basalt", "magma_block", "nether_brick", "quartz", "gold_nugget", "ancient_debris", "glowstone_dust", "glowstone", "crimson_nylium", "warped_nylium", "shroomlight", "nether_wart_block", "warped_wart_block", "end_stone", "amethyst_block", "obsidian", "crying_obsidian", "smooth_basalt", "dead_horn_coral_block", "dead_fire_coral_block", "dead_bubble_coral_block", "dead_brain_coral_block" and "dead_tube_coral_block"
-    set {!sack_farming::*} to "oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log", "warped_stem", "crimson_stem", "bamboo", "cactus", "kelp", "azalea", "flowering_azalea", "wheat", "potato", "carrot", "beetroot", "pumpkin", "melon_slice", "chorus_fruit", "nether_wart", "apple", "wheat_seeds", "cocoa_beans", "brown_mushroom", "beetroot_seeds", "pumpkin_seeds", "melon_seeds", "sugar_cane", "glow_berries", "sweet_berries", "cod", "salmon", "red_mushroom", "chicken", "rabbit", "mutton", "porkchop", "beef", "milk_bucket", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "mangrove_propagule", "cherry_sapling", "warped_fungus", "crimson_fungus", "lily_pad", "vine", "wither_rose", "glow_lichen" and "sea_pickle"
+    
+    set {!sack_farming::*} to "oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log", "warped_stem", "crimson_stem", "bamboo", "cactus", "kelp", "azalea", "flowering_azalea", "wheat", "potato", "carrot", "beetroot", "pumpkin", "melon_slice", "chorus_fruit", "nether_wart", "apple", "wheat_seeds", "cocoa_beans", "brown_mushroom", "beetroot_seeds", "pumpkin_seeds", "melon_seeds", "sugar_cane", "glow_berries", "sweet_berries", "cod", "salmon", "red_mushroom", "chicken", "rabbit", "mutton", "porkchop", "beef", "milk_bucket", "oak_sapling", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "mangrove_propagule", "cherry_sapling", "warped_fungus", "crimson_fungus", "lily_pad", "vine", "wither_rose", "glow_lichen" and "sea_pickle"
+    
     set {!sack_hunting::*} to "rotten_flesh", "bone", "spider_eye", "string", "gunpowder", "ender_pearl", "phantom_membrane", "slime_ball", "glow_ink_sac", "leather", "rabbit_hide", "blaze_rod", "magma_cream", "ghast_tear", "shulker_shell", "dragon_breath", "honey_bottle", "ink_sac", "honeycomb", "scute", "pufferfish", "feather", "nautilus_shell", "sniffer_egg", "turtle_egg", "egg" and "echo_shard"
 
 on tab complete of "/sack":
-	set tab completions for position 1 to "init", "give" and "clear"
+	set tab completions for position 1 to "give" and "clear"
 	if tab arg-1 is "give":
 		set tab completions for position 2 to all players
 		set tab completions for position 3 to "mining_small", "mining_medium", "mining_large", "mining_giant", "farming_small", "farming_medium", "farming_large", "farming_giant", "hunting_small", "hunting_medium", "hunting_large", "hunting_giant" and "universal"
@@ -12,35 +14,22 @@ on tab complete of "/sack":
 	else if tab arg-1 is "clear":
 		set tab completions for position 2 to all players
 
-command /sack [<text>] [<player>] [<text>]:
+command /sack <text> <player> [<text>]:
     description: Sack commands
     permission: group.admin
     trigger:
-        if arg-1 is "init":
-            set {_scores::*} to {sack_mining} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard objectives add item_%loop-value% dummy"
-            set {_scores::*} to {sack_farming} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard objectives add item_%loop-value% dummy"
-            set {_scores::*} to {sack_hunting} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard objectives add item_%loop-value% dummy"
-        else if arg-1 is "clear":
-            set {_scores::*} to {sack_mining} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
-            set {_scores::*} to {sack_farming} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
-            set {_scores::*} to {sack_hunting} split at ","
-            loop {_scores::*}:
-                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
+        if arg-1 is "clear":
+            loop {!sack_mining::*}:
+                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
+            loop {!sack_farming::*}:
+                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
+            loop {!sack_hunting::*}:
+                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
         else if arg-1 is "give":
             if arg-3 is "mining_small":
                 #CustomModelData:1600+type+size
                 #types:
-                # - mining: 1; farming: 2; hunter: 3; universal: 4
+                # - mining: 1; farming: 2; hunting: 3; universal: 4
                 execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Малый шахтёрский износостойкий зумпф"",""color"":""white"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""256"",""color"":""green"",""italic"":false}]']},CustomModelData:160011} 1"
             else if arg-3 is "mining_medium":
                 execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Средний шахтёрский износостойкий зумпф"",""color"":""yellow"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""8 192"",""color"":""green"",""italic"":false}]']},CustomModelData:160012} 1"
@@ -69,12 +58,11 @@ command /sack [<text>] [<player>] [<text>]:
 
 function sack_pickup(who: player, item: item, amount: number, limit: number):
     set {_id} to raw name of {_item}
-    set {_id} to "item_%{_id}%"
+    set {_id} to "sack.%{_id}%"
     replace all "minecraft:" in {_id} with ""
-    set {_obj} to objective with id {_id}
-    set {_current_amount} to score of {_who} for {_obj}
+    set {_current_amount} to getSscore({_who}, {_id})
     if {_current_amount} + {_amount} <= {_limit}:
-        execute console command "/sscore add %{_who}% %{_id}% %{_amount}%"
+        execute console command "/sscore add number %{_who}% %{_id}% %{_amount}%"
         play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
     else:
         set {_free_space} to {_limit} - {_current_amount}
@@ -84,17 +72,18 @@ function sack_pickup(who: player, item: item, amount: number, limit: number):
         play sound "entity.item.pickup" with volume 1 with pitch {_pitch} for {_who}
         if {_free_space} != 0:
             set item amount of {_item} to {_diff}
-            execute console command "/sscore add %{_who}% %{_id}% %{_free_space}%"
+            execute console command "/sscore add number %{_who}% %{_id}% %{_free_space}%"
             play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
 
 on player picking up:
     set {_item_type} to type of event-item
     set {_item_amount} to item amount of event-item
     set {_id} to raw name of event-item
+    replace all "minecraft:" in {_id} with ""
     set {_CustomModelData} to custom model data of player's offhand item
     set {_CustomModelData} to "%{_CustomModelData}%"
-    set {_nbt} to nbt compound of event-item
-    if "%{_nbt}%" is the same as "{}":
+    if custom model data of event-item is 0:
+        message "%custom model data of event-item%" to console
         if {_CustomModelData} start with "1600":
             if {_CustomModelData} end with "1":
                 set {_item_limit} to 256
@@ -106,30 +95,32 @@ on player picking up:
                 set {_item_limit} to 65536
             
             if {_CustomModelData} start with "16001":
-                if {sack_mining} partially matches "%{_id}%,":
+                if {!sack_mining::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
             else if {_CustomModelData} start with "16002":
-                if {sack_farming} partially matches "%{_id}%,":
+                if {!sack_farming::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
             else if {_CustomModelData} start with "16003":
-                if {sack_hunting} partially matches "%{_id}%,":
+                if {!sack_hunting::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
             else if {_CustomModelData} start with "16004":
-                if {sack_mining} partially matches "%{_id}%,":
+                if {!sack_mining::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
-                else if {sack_farming} partially matches "%{_id}%,":
+                else if {!sack_farming::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
-                else if {sack_hunting} partially matches "%{_id}%,":
+                else if {!sack_hunting::*} contains "%{_id}%":
                     sack_pickup(player, event-item, {_item_amount}, {_item_limit})
                     delete event-dropped item
                     cancel event
+    else:
+        message "%custom model data of event-item%" to console

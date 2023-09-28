@@ -1,8 +1,3 @@
-on load:
-	set {coords_x::*} to 0, 10, -10, 0, 0, 10,-10, 0, 0, 0, 0, 0, 20,-20, 0, 0, 20,-20, 0, 0, 0, 0, 0, 30, -30, 0, 0, 30, -30, 0, 0, 0, 0, 0, 40, -40, 0, 0, 40, -40, 0, 0, 0 and 0
-	set {coords_y::*} to 0, 10, 10, 10, 10, 0, 0, -10, 10, 0, 0, 0, 20, -20, 20, 20, 0, 0, -20, 20, 0, 0, 0, 30, 30, 30, 30, 0, 0,-30, 30, 0, 0, 0, 40,-40, 40, 40, 0, 0,-40, 40, 0 and 0
-	set {coords_z::*} to 0, 0, 0, 10, -10, 0, 0, 0, 0, 10,-10, 0, 0, 0, 20, -20, 0, 0, 0, 0, 20, -20, 0, 0, 0, 30, -30, 0, 0, 0, 0, 30, -30, 0, 0, 0, 40, -40, 0, 0, 0, 0, 40 and -40
-
 on placeholderapi placeholder request for the prefix "font":
     if identifier matches "prefix":
         if player have permission "font.hide":
@@ -13,11 +8,15 @@ on placeholderapi placeholder request for the prefix "font":
         else:
             set the result to "Биба!"
 
-on placeholderapi placeholder request for the prefix "sosi":
-    if {_items::*} contains identifier:
-        set the result to "Pisos!"
+on placeholderapi placeholder request for the prefix "sack":
+    if {!sack_mining::*} contains identifier:
+        set the result to getSscore(player, "sack.%identifier%")
+    else if {!sack_farming::*} contains identifier:
+        set the result to getSscore(player, "sack.%identifier%")
+    else if {!sack_hunting::*} contains identifier:
+        set the result to getSscore(player, "sack.%identifier%")
     else:
-        set the result to "NO!"
+        set the result to "None"
 
 on placeholderapi placeholder request for the prefix "region":
     if identifier matches "check":
