@@ -1,12 +1,7 @@
-variables:
-    {sack_mining} = "minecraft:stone,minecraft:cobblestone,minecraft:deepslate,minecraft:cobbled_deepslate,minecraft:diorite,minecraft:granite,minecraft:andesite,minecraft:tuff,minecraft:calcite,minecraft:sand,minecraft:sandstone,minecraft:red_sand,minecraft:red_sandstone,minecraft:gravel,minecraft:prismarine,minecraft:ice,minecraft:grass_block,minecraft:podzol,minecraft:mycelium,minecraft:dirt,minecraft:moss_block,minecraft:mud,minecraft:dripstone_block,minecraft:brown_terracotta,minecraft:red_terracotta,minecraft:orange_terracotta,minecraft:terracotta,minecraft:light_gray_terracotta,minecraft:yellow_terracotta,minecraft:white_terracotta,minecraft:sponge,minecraft:wet_sponge,minecraft:coal,minecraft:raw_copper,minecraft:copper_ingot,minecraft:raw_iron,minecraft:iron_ingot,minecraft:raw_gold,minecraft:gold_ingot,minecraft:diamond,minecraft:redstone,minecraft:sculk,minecraft:snowball,minecraft:clay_ball,minecraft:prismarine_shard,minecraft:prismarine_crystals,minecraft:amethyst_shard,minecraft:emerald,minecraft:lapis_lazuli,minecraft:flint,minecraft:netherrack,minecraft:soul_sand,minecraft:soul_soil,minecraft:blackstone,minecraft:basalt,minecraft:magma_block,minecraft:nether_brick,minecraft:quartz,minecraft:gold_nugget,minecraft:ancient_debris,minecraft:glowstone_dust,minecraft:glowstone,minecraft:crimson_nylium,minecraft:warped_nylium,minecraft:shroomlight,minecraft:nether_wart_block,minecraft:warped_wart_block,minecraft:end_stone,minecraft:amethyst_block,minecraft:obsidian,minecraft:crying_obsidian,minecraft:smooth_basalt,minecraft:dead_horn_coral_block,minecraft:dead_fire_coral_block,minecraft:dead_bubble_coral_block,minecraft:dead_brain_coral_block,minecraft:dead_tube_coral_block,"
-    {sack_farming} = "minecraft:oak_log,minecraft:birch_log,minecraft:spruce_log,minecraft:jungle_log,minecraft:acacia_log,minecraft:dark_oak_log,minecraft:mangrove_log,minecraft:cherry_log,minecraft:warped_stem,minecraft:crimson_stem,minecraft:bamboo,minecraft:cactus,minecraft:kelp,minecraft:azalea,minecraft:flowering_azalea,minecraft:wheat,minecraft:potato,minecraft:carrot,minecraft:beetroot,minecraft:pumpkin,minecraft:melon_slice,minecraft:chorus_fruit,minecraft:nether_wart,minecraft:apple,minecraft:wheat_seeds,minecraft:cocoa_beans,minecraft:brown_mushroom,minecraft:beetroot_seeds,minecraft:pumpkin_seeds,minecraft:melon_seeds,minecraft:sugar_cane,minecraft:glow_berries,minecraft:sweet_berries,minecraft:cod,minecraft:salmon,minecraft:red_mushroom,minecraft:chicken,minecraft:rabbit,minecraft:mutton,minecraft:porkchop,minecraft:beef,minecraft:milk_bucket,minecraft:birch_sapling,minecraft:spruce_sapling,minecraft:jungle_sapling,minecraft:acacia_sapling,minecraft:dark_oak_sapling,minecraft:mangrove_propagule,minecraft:cherry_sapling,minecraft:warped_fungus,minecraft:crimson_fungus,minecraft:lily_pad,minecraft:vine,minecraft:wither_rose,minecraft:glow_lichen,minecraft:sea_pickle,"
-    {sack_hunting} = "minecraft:rotten_flesh,minecraft:bone,minecraft:spider_eye,minecraft:string,minecraft:gunpowder,minecraft:ender_pearl,minecraft:phantom_membrane,minecraft:slime_ball,minecraft:glow_ink_sac,minecraft:leather,minecraft:rabbit_hide,minecraft:blaze_rod,minecraft:magma_cream,minecraft:ghast_tear,minecraft:shulker_shell,minecraft:dragon_breath,minecraft:honey_bottle,minecraft:ink_sac,minecraft:honeycomb,minecraft:scute,minecraft:pufferfish,minecraft:feather,minecraft:nautilus_shell,minecraft:sniffer_egg,minecraft:turtle_egg,minecraft:egg,minecraft:echo_shard,"
-
-on tab complete of "/sscore":
-	set tab completions for position 1 to "add", "remove" and "set"
-	set tab completions for position 2 to all players
-	set tab completions for position 4 to number
+on load:
+    set {!sack_mining::*} to "stone", "cobblestone", "deepslate", "cobbled_deepslate", "diorite", "granite", "andesite", "tuff", "calcite", "sand", "sandstone", "red_sand", "red_sandstone", "gravel", "prismarine", "ice", "grass_block", "podzol", "mycelium", "dirt", "moss_block", "mud", "dripstone_block", "brown_terracotta", "red_terracotta", "orange_terracotta", "terracotta", "light_gray_terracotta", "yellow_terracotta", "white_terracotta", "sponge", "wet_sponge", "coal", "raw_copper", "copper_ingot", "raw_iron", "iron_ingot", "raw_gold", "gold_ingot", "diamond", "redstone", "sculk", "snowball", "clay_ball", "prismarine_shard", "prismarine_crystals", "amethyst_shard", "emerald", "lapis_lazuli", "flint", "netherrack", "soul_sand", "soul_soil", "blackstone", "basalt", "magma_block", "nether_brick", "quartz", "gold_nugget", "ancient_debris", "glowstone_dust", "glowstone", "crimson_nylium", "warped_nylium", "shroomlight", "nether_wart_block", "warped_wart_block", "end_stone", "amethyst_block", "obsidian", "crying_obsidian", "smooth_basalt", "dead_horn_coral_block", "dead_fire_coral_block", "dead_bubble_coral_block", "dead_brain_coral_block" and "dead_tube_coral_block"
+    set {!sack_farming::*} to "oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log", "warped_stem", "crimson_stem", "bamboo", "cactus", "kelp", "azalea", "flowering_azalea", "wheat", "potato", "carrot", "beetroot", "pumpkin", "melon_slice", "chorus_fruit", "nether_wart", "apple", "wheat_seeds", "cocoa_beans", "brown_mushroom", "beetroot_seeds", "pumpkin_seeds", "melon_seeds", "sugar_cane", "glow_berries", "sweet_berries", "cod", "salmon", "red_mushroom", "chicken", "rabbit", "mutton", "porkchop", "beef", "milk_bucket", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "mangrove_propagule", "cherry_sapling", "warped_fungus", "crimson_fungus", "lily_pad", "vine", "wither_rose", "glow_lichen" and "sea_pickle"
+    set {!sack_hunting::*} to "rotten_flesh", "bone", "spider_eye", "string", "gunpowder", "ender_pearl", "phantom_membrane", "slime_ball", "glow_ink_sac", "leather", "rabbit_hide", "blaze_rod", "magma_cream", "ghast_tear", "shulker_shell", "dragon_breath", "honey_bottle", "ink_sac", "honeycomb", "scute", "pufferfish", "feather", "nautilus_shell", "sniffer_egg", "turtle_egg", "egg" and "echo_shard"
 
 on tab complete of "/sack":
 	set tab completions for position 1 to "init", "give" and "clear"
@@ -19,7 +14,7 @@ on tab complete of "/sack":
 
 command /sack [<text>] [<player>] [<text>]:
     description: Sack commands
-    permission: skript.sack
+    permission: group.admin
     trigger:
         if arg-1 is "init":
             set {_scores::*} to {sack_mining} split at ","
@@ -71,51 +66,6 @@ command /sack [<text>] [<player>] [<text>]:
                 execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Гигантский охотничий карманный рюкзак"",""color"":""light_purple"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160034} 1"
             else if arg-3 is "universal":
                 execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Универсальный мешок рабочего игрока"",""color"":""gold"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160044} 1"
-
-command /sscore [<text>] [<player>] [<text>] [<number>]:
-    description: Score manipulation
-    usage: /sscore [add/remove] [player] [score] [amount]
-    permission: skript.sscore
-    trigger:
-        if arg-1 is "add":
-            if arg-2 is set:
-                if arg-3 is set:
-                    if arg-4 is set:
-                        set {_obj} to objective with id arg-3
-                        set {_current_amount} to score of arg-2 for {_obj}
-                        set score of arg-2 for {_obj} to {_current_amount} + arg-4
-                    else:
-                        send "/sscore add &7[player] [score] &c[amount]" to player
-                else:
-                    send "/sscore add &7[player] &c[score] [amount]" to player
-            else:
-                send "/sscore add &c[player] [score] [amount]" to player
-        else if arg-1 is "remove":
-            if arg-2 is set:
-                if arg-3 is set:
-                    if arg-4 is set:
-                        set {_obj} to objective with id arg-3
-                        set {_current_amount} to score of arg-2 for {_obj}
-                        set score of arg-2 for {_obj} to {_current_amount} - arg-4
-                    else:
-                        send "/sscore remove &7[player] [score] &c[amount]" to player
-                else:
-                    send "/sscore remove &7[player] &c[score] [amount]" to player
-            else:
-                send "/sscore remove &c[player] [score] [amount]" to player
-        else if arg-1 is "set":
-            if arg-2 is set:
-                if arg-3 is set:
-                    if arg-4 is set:
-                        set {_obj} to objective with id arg-3
-                        set {_current_amount} to score of arg-2 for {_obj}
-                        set score of arg-2 for {_obj} to arg-4
-                    else:
-                        send "/sscore remove &7[player] [score] &c[amount]" to player
-                else:
-                    send "/sscore remove &7[player] &c[score] [amount]" to player
-            else:
-                send "/sscore remove &c[player] [score] [amount]" to player
 
 function sack_pickup(who: player, item: item, amount: number, limit: number):
     set {_id} to raw name of {_item}

@@ -1,0 +1,27 @@
+on tab complete of "/sscore":
+    set tab completions for position 1 to "get" and "set"
+    if tab arg-1 matches "get":
+        set tab completions for position 2 to "value" and "list"
+    else:
+        set tab completions for position 2 to "string", "number" and "list"
+    set tab completions for position 3 to all players
+
+command /sscore <text> <text> <player> <text> [<text>]:
+    permission: group.admin
+    description: YAML-based scores
+    trigger:
+        if arg-1 matches "get":
+            if arg-2 matches "list":
+                message yml list "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml" to command executor
+            else:
+                message yml value "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml" to command executor
+        else:
+            set {_executionTime} to system millis
+            set {_getter} to yml value "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml"
+            if arg-2 matches "number":
+                set yml value "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5 parsed as number
+            else if arg-2 matches "string":
+                set yml value "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5
+            else if arg-2 matches "list":
+                set yml value "scores.%arg-4%" from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5 parsed as numbers
+            message "Set score %arg-4% of %arg-3% took %system millis - {_executionTime}%ms" to console
