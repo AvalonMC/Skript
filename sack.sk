@@ -1,0 +1,185 @@
+variables:
+    {sack_mining} = "minecraft:stone,minecraft:cobblestone,minecraft:deepslate,minecraft:cobbled_deepslate,minecraft:diorite,minecraft:granite,minecraft:andesite,minecraft:tuff,minecraft:calcite,minecraft:sand,minecraft:sandstone,minecraft:red_sand,minecraft:red_sandstone,minecraft:gravel,minecraft:prismarine,minecraft:ice,minecraft:grass_block,minecraft:podzol,minecraft:mycelium,minecraft:dirt,minecraft:moss_block,minecraft:mud,minecraft:dripstone_block,minecraft:brown_terracotta,minecraft:red_terracotta,minecraft:orange_terracotta,minecraft:terracotta,minecraft:light_gray_terracotta,minecraft:yellow_terracotta,minecraft:white_terracotta,minecraft:sponge,minecraft:wet_sponge,minecraft:coal,minecraft:raw_copper,minecraft:copper_ingot,minecraft:raw_iron,minecraft:iron_ingot,minecraft:raw_gold,minecraft:gold_ingot,minecraft:diamond,minecraft:redstone,minecraft:sculk,minecraft:snowball,minecraft:clay_ball,minecraft:prismarine_shard,minecraft:prismarine_crystals,minecraft:amethyst_shard,minecraft:emerald,minecraft:lapis_lazuli,minecraft:flint,minecraft:netherrack,minecraft:soul_sand,minecraft:soul_soil,minecraft:blackstone,minecraft:basalt,minecraft:magma_block,minecraft:nether_brick,minecraft:quartz,minecraft:gold_nugget,minecraft:ancient_debris,minecraft:glowstone_dust,minecraft:glowstone,minecraft:crimson_nylium,minecraft:warped_nylium,minecraft:shroomlight,minecraft:nether_wart_block,minecraft:warped_wart_block,minecraft:end_stone,minecraft:amethyst_block,minecraft:obsidian,minecraft:crying_obsidian,minecraft:smooth_basalt,minecraft:dead_horn_coral_block,minecraft:dead_fire_coral_block,minecraft:dead_bubble_coral_block,minecraft:dead_brain_coral_block,minecraft:dead_tube_coral_block,"
+    {sack_farming} = "minecraft:oak_log,minecraft:birch_log,minecraft:spruce_log,minecraft:jungle_log,minecraft:acacia_log,minecraft:dark_oak_log,minecraft:mangrove_log,minecraft:cherry_log,minecraft:warped_stem,minecraft:crimson_stem,minecraft:bamboo,minecraft:cactus,minecraft:kelp,minecraft:azalea,minecraft:flowering_azalea,minecraft:wheat,minecraft:potato,minecraft:carrot,minecraft:beetroot,minecraft:pumpkin,minecraft:melon_slice,minecraft:chorus_fruit,minecraft:nether_wart,minecraft:apple,minecraft:wheat_seeds,minecraft:cocoa_beans,minecraft:brown_mushroom,minecraft:beetroot_seeds,minecraft:pumpkin_seeds,minecraft:melon_seeds,minecraft:sugar_cane,minecraft:glow_berries,minecraft:sweet_berries,minecraft:cod,minecraft:salmon,minecraft:red_mushroom,minecraft:chicken,minecraft:rabbit,minecraft:mutton,minecraft:porkchop,minecraft:beef,minecraft:milk_bucket,minecraft:birch_sapling,minecraft:spruce_sapling,minecraft:jungle_sapling,minecraft:acacia_sapling,minecraft:dark_oak_sapling,minecraft:mangrove_propagule,minecraft:cherry_sapling,minecraft:warped_fungus,minecraft:crimson_fungus,minecraft:lily_pad,minecraft:vine,minecraft:wither_rose,minecraft:glow_lichen,minecraft:sea_pickle,"
+    {sack_hunting} = "minecraft:rotten_flesh,minecraft:bone,minecraft:spider_eye,minecraft:string,minecraft:gunpowder,minecraft:ender_pearl,minecraft:phantom_membrane,minecraft:slime_ball,minecraft:glow_ink_sac,minecraft:leather,minecraft:rabbit_hide,minecraft:blaze_rod,minecraft:magma_cream,minecraft:ghast_tear,minecraft:shulker_shell,minecraft:dragon_breath,minecraft:honey_bottle,minecraft:ink_sac,minecraft:honeycomb,minecraft:scute,minecraft:pufferfish,minecraft:feather,minecraft:nautilus_shell,minecraft:sniffer_egg,minecraft:turtle_egg,minecraft:egg,minecraft:echo_shard,"
+
+on tab complete of "/sscore":
+	set tab completions for position 1 to "add", "remove" and "set"
+	set tab completions for position 2 to all players
+	set tab completions for position 4 to number
+
+on tab complete of "/sack":
+	set tab completions for position 1 to "init", "give" and "clear"
+	if tab arg-1 is "give":
+		set tab completions for position 2 to all players
+		set tab completions for position 3 to "mining_small", "mining_medium", "mining_large", "mining_giant", "farming_small", "farming_medium", "farming_large", "farming_giant", "hunting_small", "hunting_medium", "hunting_large", "hunting_giant" and "universal"
+		set tab completions for position 4 to number
+	else if tab arg-1 is "clear":
+		set tab completions for position 2 to all players
+
+command /sack [<text>] [<player>] [<text>]:
+    description: Sack commands
+    permission: skript.sack
+    trigger:
+        if arg-1 is "init":
+            set {_scores::*} to {sack_mining} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard objectives add item_%loop-value% dummy"
+            set {_scores::*} to {sack_farming} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard objectives add item_%loop-value% dummy"
+            set {_scores::*} to {sack_hunting} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard objectives add item_%loop-value% dummy"
+        else if arg-1 is "clear":
+            set {_scores::*} to {sack_mining} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
+            set {_scores::*} to {sack_farming} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
+            set {_scores::*} to {sack_hunting} split at ","
+            loop {_scores::*}:
+                execute player command "/scoreboard players set %arg-2% item_%loop-value% 0"
+        else if arg-1 is "give":
+            if arg-3 is "mining_small":
+                #CustomModelData:1600+type+size
+                #types:
+                # - mining: 1; farming: 2; hunter: 3; universal: 4
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Малый шахтёрский износостойкий зумпф"",""color"":""white"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""256"",""color"":""green"",""italic"":false}]']},CustomModelData:160011} 1"
+            else if arg-3 is "mining_medium":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Средний шахтёрский износостойкий зумпф"",""color"":""yellow"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""8 192"",""color"":""green"",""italic"":false}]']},CustomModelData:160012} 1"
+            else if arg-3 is "mining_large":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Большой шахтёрский износостойкий зумпф"",""color"":""aqua"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""16 384"",""color"":""green"",""italic"":false}]']},CustomModelData:160013} 1"
+            else if arg-3 is "mining_giant":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Гигантский шахтёрский износостойкий зумпф"",""color"":""light_purple"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160014} 1"
+            else if arg-3 is "farming_small":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Малый фермерский безобразный короб"",""color"":""white"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""256"",""color"":""green"",""italic"":false}]']},CustomModelData:160021} 1"
+            else if arg-3 is "farming_medium":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Средний фермерский безобразный короб"",""color"":""yellow"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""8 192"",""color"":""green"",""italic"":false}]']},CustomModelData:160022} 1"
+            else if arg-3 is "farming_large":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Большой фермерский безобразный короб"",""color"":""aqua"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""16 384"",""color"":""green"",""italic"":false}]']},CustomModelData:160023} 1"
+            else if arg-3 is "hunting_giant":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Гигантский фермерский безобразный короб"",""color"":""light_purple"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160024} 1"
+            else if arg-3 is "hunting_small":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Малый охотничий карманный рюкзак"",""color"":""white"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""256"",""color"":""green"",""italic"":false}]']},CustomModelData:160031} 1"
+            else if arg-3 is "hunting_medium":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Средний охотничий карманный рюкзак"",""color"":""yellow"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""8 192"",""color"":""green"",""italic"":false}]']},CustomModelData:160032} 1"
+            else if arg-3 is "hunting_large":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Большой охотничий карманный рюкзак"",""color"":""aqua"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""16 384"",""color"":""green"",""italic"":false}]']},CustomModelData:160033} 1"
+            else if arg-3 is "hunting_giant":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Гигантский охотничий карманный рюкзак"",""color"":""light_purple"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160034} 1"
+            else if arg-3 is "universal":
+                execute player command "/give %arg-2% recovery_compass{display:{Name:'{""text"":""Универсальный мешок рабочего игрока"",""color"":""gold"",""italic"":false}',Lore:['{""text"":"" ""}','{""text"":""Автоматически собирает в себя"",""color"":""gray"",""italic"":false}','{""text"":""все собираемые ресурсы"",""color"":""gray"",""italic"":false}','{""text"":"" ""}','[{""text"":""Лимит на ресурс: "",""color"":""gray"",""italic"":false},{""text"":""65 536"",""color"":""green"",""italic"":false}]']},CustomModelData:160044} 1"
+
+command /sscore [<text>] [<player>] [<text>] [<number>]:
+    description: Score manipulation
+    usage: /sscore [add/remove] [player] [score] [amount]
+    permission: skript.sscore
+    trigger:
+        if arg-1 is "add":
+            if arg-2 is set:
+                if arg-3 is set:
+                    if arg-4 is set:
+                        set {_obj} to objective with id arg-3
+                        set {_current_amount} to score of arg-2 for {_obj}
+                        set score of arg-2 for {_obj} to {_current_amount} + arg-4
+                    else:
+                        send "/sscore add &7[player] [score] &c[amount]" to player
+                else:
+                    send "/sscore add &7[player] &c[score] [amount]" to player
+            else:
+                send "/sscore add &c[player] [score] [amount]" to player
+        else if arg-1 is "remove":
+            if arg-2 is set:
+                if arg-3 is set:
+                    if arg-4 is set:
+                        set {_obj} to objective with id arg-3
+                        set {_current_amount} to score of arg-2 for {_obj}
+                        set score of arg-2 for {_obj} to {_current_amount} - arg-4
+                    else:
+                        send "/sscore remove &7[player] [score] &c[amount]" to player
+                else:
+                    send "/sscore remove &7[player] &c[score] [amount]" to player
+            else:
+                send "/sscore remove &c[player] [score] [amount]" to player
+        else if arg-1 is "set":
+            if arg-2 is set:
+                if arg-3 is set:
+                    if arg-4 is set:
+                        set {_obj} to objective with id arg-3
+                        set {_current_amount} to score of arg-2 for {_obj}
+                        set score of arg-2 for {_obj} to arg-4
+                    else:
+                        send "/sscore remove &7[player] [score] &c[amount]" to player
+                else:
+                    send "/sscore remove &7[player] &c[score] [amount]" to player
+            else:
+                send "/sscore remove &c[player] [score] [amount]" to player
+
+function sack_pickup(who: player, item: item, amount: number, limit: number):
+    set {_id} to raw name of {_item}
+    set {_id} to "item_%{_id}%"
+    replace all "minecraft:" in {_id} with ""
+    set {_obj} to objective with id {_id}
+    set {_current_amount} to score of {_who} for {_obj}
+    if {_current_amount} + {_amount} <= {_limit}:
+        execute console command "/sscore add %{_who}% %{_id}% %{_amount}%"
+        play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
+    else:
+        set {_free_space} to {_limit} - {_current_amount}
+        set {_diff} to {_amount} - {_free_space}
+        give {_who} {_diff} of {_item}
+        set {_pitch} to random number from 1 to 1.7
+        play sound "entity.item.pickup" with volume 1 with pitch {_pitch} for {_who}
+        if {_free_space} != 0:
+            set item amount of {_item} to {_diff}
+            execute console command "/sscore add %{_who}% %{_id}% %{_free_space}%"
+            play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
+
+on player picking up:
+    set {_item_type} to type of event-item
+    set {_item_amount} to item amount of event-item
+    set {_id} to raw name of event-item
+    set {_CustomModelData} to custom model data of player's offhand item
+    set {_CustomModelData} to "%{_CustomModelData}%"
+    set {_nbt} to nbt compound of event-item
+    if "%{_nbt}%" is the same as "{}":
+        if {_CustomModelData} start with "1600":
+            if {_CustomModelData} end with "1":
+                set {_item_limit} to 256
+            else if {_CustomModelData} end with "2":
+                set {_item_limit} to 8192
+            else if {_CustomModelData} end with "3":
+                set {_item_limit} to 16384
+            else if {_CustomModelData} end with "4":
+                set {_item_limit} to 65536
+            
+            if {_CustomModelData} start with "16001":
+                if {sack_mining} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event
+            else if {_CustomModelData} start with "16002":
+                if {sack_farming} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event
+            else if {_CustomModelData} start with "16003":
+                if {sack_hunting} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event
+            else if {_CustomModelData} start with "16004":
+                if {sack_mining} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event
+                else if {sack_farming} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event
+                else if {sack_hunting} partially matches "%{_id}%,":
+                    sack_pickup(player, event-item, {_item_amount}, {_item_limit})
+                    delete event-dropped item
+                    cancel event

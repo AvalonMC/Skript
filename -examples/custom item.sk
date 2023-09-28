@@ -1,0 +1,122 @@
+function iron_drill():: itemtype:
+	set {_i} to 1 of iron pickaxe named "&eЖелезный бур" with lore "&7Копает область &a1x3&7","&7Потребляет редстоун в качестве топлива.","&7Заправляется на заправочной станции.","","&bТопливо: 0/500"
+	add nbt compound of "{drill_fuel:0,drill_fuel_max:500,drill_mode:1}" to nbt compound of {_i}
+	add nbt compound of "{CustomItem:""iron_drill""}" to nbt compound of {_i}
+	add nbt compound of "{CustomModelData:1553004}" to nbt compound of {_i}
+	#set {_n} to nbt compound of {_i}
+	#set {_a::*} to compound list tag "AttributeModifiers" of {_n}
+	#add nbt compound of "{AttributeName:""generic.max_health"",Amount:10,Operation:0,Slot:chest,UUID:[I;-1201124,10148,125632,-20296],Name:""generic.max_health""}" to {_a::*}
+	#set compound list tag "AttributeModifiers" of {_n} to {_a::*}
+	return {_i}
+
+function diamond_drill():: itemtype:
+	set {_i} to 1 of netherite pickaxe named "&bАлмазный бур" with lore "&7Копает область &a3x3&7","&7Потребляет редстоун в качестве топлива.","&7Заправляется на заправочной станции.","","&bТопливо: 0/1500"
+	add nbt compound of "{drill_fuel:0,drill_fuel_max:1500,drill_mode:1}" to nbt compound of {_i}
+	add nbt compound of "{CustomItem:""diamond_drill""}" to nbt compound of {_i}
+	add nbt compound of "{CustomModelData:1553004}" to nbt compound of {_i}
+	return {_i}
+
+on load:
+    set {iron_drill} to iron_drill()
+    set {iron_drill_recipe::*} to air, 8 iron blocks, 8 iron blocks, 64 copper ingots, 64 redstone items, 8 iron blocks, 16 redstone comparator items, 64 copper ingots, air
+    #register new shaped recipe for {iron_drill} using air, iron block, iron block, copper ingot, redstone, iron block, comparator, copper ingot and air with id "ironDrill"
+    set {diamond_drill} to diamond_drill()
+    #register new shaped recipe for {diamond_drill} using air, diamond block, diamond block, copper block, {iron_drill}, diamond block, comparator, copper block, and air with id "diamonDrill"
+
+command /votes:
+    executable by: players
+    trigger:
+        send a "get" request to "https://minecraftrating.ru/vote/97890/"
+        set {_response} to the last http response
+        set {_body} to body of {_response}
+        set {_splited::*} to {_body} split at "<span id=""votes_num"">"
+        set {_splited::*} to {_splited::2} split at "</span>"
+        set {_votes} to {_splited::1} parsed as number
+        broadcast "%{_votes} * 0.1%"
+        send a "get" request to "https://minecraftrating.ru/server/avalon/"
+        set {_response} to the last http response
+        set {_body} to body of {_response}
+        set {_splited::*} to {_body} split at "<strong>"
+        set {_splited::*} to {_splited::3} split at "</strong>"
+        set {_top} to {_splited::1}
+        if {_top} is "&gt;200":
+            set {_top} to 0
+        else:
+            set {_top} to {_top} parsed as number
+        broadcast "%{_top}%"
+
+function isItemsEqual(item1: itemtype, item2: itemtype):: boolean:
+    set {i1Amount} to item amount of {_item1}
+    set {i2Amount} to item amount of {_item2}
+    set {i1Type} to type of {_item1}
+    set {i2Type} to type of {_item2}
+    set {i1CustomItem} to tag "CustomItem" of (nbt compound of {_item1})
+    set {i2CustomItem} to tag "CustomItem" of (nbt compound of {_item2})
+    set {isCI} to false
+    if tag "CustomItem" of nbt of {_item1} exists:
+        if tag "CustomItem" of nbt of {_item2} exists:
+            if {i1CustomItem} is {i2CustomItem}:
+                set {isCI} to true
+    if tag "CustomItem" of nbt of {_item1} doesn't exist:
+        if tag "CustomItem" of nbt of {_item2} doesn't exist:
+            set {isCI} to true
+    if {i1Type} is {i2Type}:
+        if {i1Amount} is greater or equal to {i2Amount}:
+            if {isCI} is true:
+            return true
+    return false
+
+function isRecipeEqual(grid: inventory, recipe: itemtypes):: boolean:
+    if isItemsEqual(slot 1 of {_grid}, {_recipe::1}) is true:
+        isItemsEqual(slot 2 of {_grid}, {_recipe::2}) is true
+        isItemsEqual(slot 3 of {_grid}, {_recipe::3}) is true
+        isItemsEqual(slot 4 of {_grid}, {_recipe::4}) is true
+        isItemsEqual(slot 5 of {_grid}, {_recipe::5}) is true
+        isItemsEqual(slot 6 of {_grid}, {_recipe::6}) is true
+        isItemsEqual(slot 7 of {_grid}, {_recipe::7}) is true
+        isItemsEqual(slot 8 of {_grid}, {_recipe::8}) is true
+        isItemsEqual(slot 9 of {_grid}, {_recipe::9}) is true
+        return true
+    else:
+        return false
+
+on preparing craft:
+    #set {grid::*} to item amount of (slot 1 of current inventory of player), (slot 2 of current inventory of player), (slot 3 of current inventory of player), (slot 4 of current inventory of player), (slot 5 of current inventory of player), (slot 6 of current inventory of player), (slot 7 of current inventory of player), (slot 8 of current inventory of player), (slot 9 of current inventory of player)
+    #set {recipe::*} to item amount of {iron_drill_recipe::*}
+    #set {eq} to true
+    #loop {recipe::*}:
+    #    if {grid::%loop-value%} is not greater or equal to {recipe::%loop-value%}:
+    #        set {eq} to false
+    #{grid::7} is greater or equal to {recipe::7}
+    #message "%{i1Amount}% %{i2Amount}% %{eq}%"
+    #if event-item is iron_drill():
+    set {_p} to isRecipeEqual((current inventory of player), {iron_drill_recipe::*})
+    if {_p} is true:
+        set slot 0 of current inventory of player to iron_drill()
+    else: 
+        set slot 0 of current inventory of player to paper named "Sosi Pisos"
+    #if event-item is iron_drill():
+        #if slot 2 of current inventory of player is 8 iron block:
+        #    set slot 0 of current inventory of player to a diamond sword named "&aLe Sword" with lore "&bStuff"
+
+on craft:
+    if event-item is iron_drill():
+        set {grid::*} to item amount of (slot 1 of current inventory of player), (slot 2 of current inventory of player), (slot 3 of current inventory of player), (slot 4 of current inventory of player), (slot 5 of current inventory of player), (slot 6 of current inventory of player), (slot 7 of current inventory of player), (slot 8 of current inventory of player), (slot 9 of current inventory of player)
+        set {recipe::*} to item amount of {iron_drill_recipe::*}
+        loop {grid::*}:
+            set {amount} to {grid::%loop-value%} - {recipe::%loop-value%}
+            message "%loop-value%"
+            #if {amount} > 0:
+            #    set {amount} to amount of (slot 1 of current inventory of player) in (slot %loop-value% of current inventory of player)
+
+#aliases: # An alias for our allowed hat items.
+#    custom helmets = iron block, gold block, diamond block
+
+#on prepare craft:
+#    event-slot is the helmet slot of player # Check that player clicked their head slot.
+#    inventory action is place all or nothing
+#    cursor slot of player is custom helmets # Check if the item is in our custom alias.
+#    cancel the event
+#    set {_old helmet} to the helmet of player
+#    set the helmet of player to the cursor slot of player
+#    set the cursor slot of player to {_old helmet}

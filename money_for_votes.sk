@@ -1,0 +1,77 @@
+variables:
+    {votes_old} = 0
+    {votes_today} = "pisos"
+
+on load:
+    execute console command "/scoreboard players set ##server monitoring_votes 0"
+    execute console command "/scoreboard players set ##server monitoring_place 0"
+    execute console command "/scoreboard players set ##server monitoring_chance 0"
+    execute console command "/scoreboard players set ##server monitoring_chance_display_int 0"
+    execute console command "/scoreboard players set ##server monitoring_chance_display_dot 0"
+    execute console command "/scoreboard players set ##server monitoring_chance_display_decimal 0"
+    execute console command "/scoreboard players set ##server monitoring_chance_display_pow 0"
+
+at 0:00 in "world":
+    execute console command "/monitoring_votes"
+
+command /monitoring_votes:
+    #executable by: player
+    trigger:
+        send a "get" request to "https://minecraftrating.ru/server/avalon/"
+        set {_response} to the last http response
+        set {_body} to body of {_response}
+        
+        set {_splited::*} to {_body} split at "<strong>"
+        set {_splited::*} to {_splited::3} split at "</strong>"
+        set {_top} to {_splited::1}
+        if {_top} is "&gt;200": #"&gt;200" is ">200"
+            set {_top} to 201
+        else:
+            set {_top} to {_top} parsed as number
+        #broadcast "%{_top}%"
+        
+        set {_splited::*} to {_body} split at "Голосов:</td><td><meta content="""
+        set {_splited::*} to {_splited::2} split at """>"
+        set {_votes} to {_splited::1} parsed as number
+        #broadcast "%{_votes}%"
+        
+        #set {_chance} to round((201 - {_top}) * 2) #by place
+        set {_chance} to {_votes} #by votes
+        if {votes_today} isn't a number:
+            set {votes_today} to {_votes}
+        set {_votes_diff} to {_votes} - {votes_today}
+        
+        if {_votes_diff} isn't 0:
+            set {_chance_var1} to floor(({_votes_diff} - 1) / 5)
+            #set {_chance_var2} to floor(({_chance_diff} - 6) / 5)
+            set {_chance_var3} to mod({_votes_diff} - 1, 5)
+            set {_chance_var4} to min(max(1,{_votes_diff}),1)*(min({_votes_diff},5)+min(1,{_chance_var1})*(5*(1-0.5^({_chance_var1}-1))+({_chance_var3}+1)*0.5^({_chance_var1})))
+        else: 
+            set {_chance_var4} to 0
+            
+        set {_chance_int} to floor({_chance_var4}) #floor({_chance} / 50)
+        set {_chance_dot} to 0
+        set {_chance_decimal} to mod({_chance_var4}, 1)
+        set {_chance_decimal} to floor({_chance_decimal} * 100) / 100
+        set {_chance_pow} to 0
+        
+        if {_chance_decimal} isn't 0:
+            set {_chance_dot} to 1
+            if {_chance_decimal} is smaller than 0.1:
+                set {_chance_pow} to 1
+            set {_chance_len} to length of "%{_chance_decimal}%"
+            set {_chance_decimal} to {_chance_decimal} * 10^({_chance_len} - 2)
+        
+        if {_chance_var4} isn't {votes_old}:
+            if {_votes} is a number:
+                set {_diff} to {_chance_var4} - {votes_old}
+                set {votes_old} to {_chance_var4}
+                execute console command "/scoreboard players set ##server monitoring_votes %{_votes}%"
+                execute console command "/scoreboard players set ##server monitoring_place %{_top}%"
+                execute console command "/scoreboard players set ##server monitoring_chance %{_votes_diff}%"
+                execute console command "/scoreboard players set ##server monitoring_chance_display_int %{_chance_int}%"
+                execute console command "/scoreboard players set ##server monitoring_chance_display_dot %{_chance_dot}%"
+                execute console command "/scoreboard players set ##server monitoring_chance_display_decimal %{_chance_decimal}%"
+                execute console command "/scoreboard players set ##server monitoring_chance_display_pow %{_chance_pow}%"
+                send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_diff}%%%&7!" to players
+                #play sound "block.amethyst_block.resonate" in ambient category with volume 2 with pitch 0 to players
