@@ -1,14 +1,15 @@
-on tab complete of "/sscore":
-    set tab completions for position 1 to "get", "set", "add", "remove" and "delete"
-    if tab arg-1 matches "get":
-        set tab completions for position 2 to "value" and "list"
-    else if tab arg-1 matches "set":
-        set tab completions for position 2 to "string" and "number"
-    else if tab arg-1 matches "delete":
-        set tab completions for position 2 to "anything"
-    else:
-        set tab completions for position 2 to "number"
-    set tab completions for position 3 to all players
+#Need SkBee
+# on tab complete of "/sscore":
+#     set tab completions for position 1 to "get", "set", "add", "remove" and "delete"
+#     if tab arg-1 matches "get":
+#         set tab completions for position 2 to "value" and "list"
+#     else if tab arg-1 matches "set":
+#         set tab completions for position 2 to "string" and "number"
+#     else if tab arg-1 matches "delete":
+#         set tab completions for position 2 to "anything"
+#     else:
+#         set tab completions for position 2 to "number"
+#     set tab completions for position 3 to all players
 
 function getSscore(playerName: string, identifier: string) :: string:
     if yml {_identifier} in file "plugins/Skript/scripts/players/%{_playerName}%.yml" doesn't exist:
