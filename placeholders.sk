@@ -40,7 +40,7 @@ on placeholderapi placeholder request for the prefix "info":
                 add "&7|" to {_load::*}
             add 1 to {_count}
         
-        set the result to "%join {_load::*}%"
+        set the result to join {_load::*}
 
     else:
         set the result to "None"
@@ -59,4 +59,24 @@ on placeholderapi placeholder request for the prefix "region":
         set the result to {_result}
     else if identifier matches "amount":
         set the result to "%getRegionsAmount(player)%"
-        
+
+on placeholderapi placeholder request for the prefix "sack":
+    set {_item16::*} to "ender_pearl", "honey_bottle", "egg" and "snowball"
+    set {_item1::*} to "milk_bucket", "lava_bucket" and "water_bucket"
+    set {_amount} to getSscore("%player%", "sack.%identifier%") parsed as number
+    set {_result} to placeholder "checkitem_amount_mat:AIR" from player parsed as number
+    if {_item16::*} contains identifier:
+        if {_amount} >= {_result} * 16:
+            set the result to "%{_result} * 16%"
+        else:
+            set the result to "%{_amount}%"
+    else if {_item1::*} contains identifier:
+        if {_amount} >= {_result}:
+            set the result to "%{_result}%"
+        else:
+            set the result to "%{_amount}%"
+    else:
+        if {_amount} >= {_result} * 64:
+            set the result to "%{_result} * 64%"
+        else:
+            set the result to "%{_amount}%"
