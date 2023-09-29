@@ -29,18 +29,23 @@ command /sscore <text> <text> <text> <text> [<text>]:
                 message yml list arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to command executor
             else:
                 message getSscore(arg-3, arg-4) to command executor
+
         else if arg-1 matches "set":
             if arg-2 matches "number":
                 set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5 parsed as number
             else if arg-2 matches "string":
                 set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to arg-5
+
         else if arg-1 matches "add":
             set {_prevValue} to getSscore(arg-3, arg-4)
             set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} parsed as number + arg-5 parsed as number
+
         else if arg-1 matches "remove":
-            set {_prevValue} to getSscore(arg-3, arg-4) parsed as number
+            set {_prevValue} to getSscore(arg-3, arg-4)
             set yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml" to {_prevValue} parsed as number - arg-5 parsed as number
+
         else if arg-1 matches "delete":
             delete yml value arg-4 from file "plugins/Skript/scripts/players/%arg-3%.yml"
+            
         else:
             message "Wrong argument %arg-1%" to command executor

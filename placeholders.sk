@@ -8,23 +8,50 @@ on placeholderapi placeholder request for the prefix "font":
         else:
             set the result to "Биба!"
 
-on placeholderapi placeholder request for the prefix "sack":
-    if {!sack_mining::*} contains identifier:
-        set the result to getSscore("%player%", "sack.%identifier%")
-    else if {!sack_farming::*} contains identifier:
-        set the result to getSscore("%player%", "sack.%identifier%")
-    else if {!sack_hunting::*} contains identifier:
-        set the result to getSscore("%player%", "sack.%identifier%")
+on placeholderapi placeholder request for the prefix "sscore":
+    set the result to getSscore("%player%", identifier)
+
+on placeholderapi placeholder request for the prefix "info":
+    if identifier matches "chance":
+        set the result to getSscore("##server", "monitoring.chance")
+
+    else if identifier matches "hours":
+        set {_hours} to placeholder "objective_score_hours" from player parsed as number
+        set {_thousands} to floor({_hours}  / 1000) + 1
+        set {_hundreds} to floor(mod({_hours}, 1000) / 100) + 1
+        set {_colors::*} to "##BAC0C2", "##FFFFFF", "##FFFA84", "##48FF38", "##2FE0D4", "##3289E5", "##143BFF", "##671CD8", "##E22FE2" and "##FF1814"
+        set {_symbols::*} to "☆", "★" and "✪"
+        set the result to "%{_hours}% %{_colors::%{_hundreds}%}%%{_symbols::%{_thousands}%}%"
+
+    else if identifier matches "streak_load":
+        set {_hour} to placeholder "objective_score_hour" from player parsed as number
+        set {_load::*} to ""
+        set {_len} to 20
+        set {_delim} to 72000 / {_len}
+        set {_count} to 0
+
+        while {_count} is less than {_len}:
+            if {_count} * {_delim} < {_hour}:
+                if ({_count} + 1) * {_delim} > {_hour}:
+                    add "&e|" to {_load::*}
+                else:
+                    add "&a|" to {_load::*}
+            else:
+                add "&7|" to {_load::*}
+            add 1 to {_count}
+        
+        set the result to "%join {_load::*}%"
+
     else:
         set the result to "None"
 
 on placeholderapi placeholder request for the prefix "region":
     if identifier matches "check":
         set {_result} to ""
-        loop {coords_x::*}:
-            set {_x} to x position of player's location + {coords_x::%loop-index%}
-            set {_y} to y position of player's location + {coords_y::%loop-index%}
-            set {_z} to z position of player's location + {coords_z::%loop-index%}
+        loop {!coords_x::*}:
+            set {_x} to x position of player's location + {!coords_x::%loop-index%}
+            set {_y} to y position of player's location + {!coords_y::%loop-index%}
+            set {_z} to z position of player's location + {!coords_z::%loop-index%}
             set {_temp_loc} to the location at floor({_x}), floor({_y}), floor({_z}) in world world
             if "%region at {_temp_loc}%" isn't "<none>":
                 set {_result} to "%region at {_temp_loc}%"
