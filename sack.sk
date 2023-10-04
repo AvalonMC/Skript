@@ -7,58 +7,17 @@ on load:
 
     set {SERVER} to "survival_main"
 
-    loop all players:
-        sack_capacity(loop-player)
+    applyCache()
 
-#Need SkBee
-# on tab complete of "/sack":
-# 	set tab completions for position 1 to "give" and "clear"
-# 	if tab arg-1 is "give":
-# 		set tab completions for position 2 to all players
-# 		set tab completions for position 3 to "mining_small", "mining_medium", "mining_large", "mining_giant", "farming_small", "farming_medium", "farming_large", "farming_giant", "hunting_small", "hunting_medium", "hunting_large", "hunting_giant" and "universal"
-# 		set tab completions for position 4 to number
-# 	else if tab arg-1 is "clear":
-# 		set tab completions for position 2 to all players
-
-command /sack <text> <player> [<text>]:
-    description: Sack commands
-    permission: group.admin
-    trigger:
-        if arg-1 is "clear":
-            loop {SACK_MINING::*}:
-                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
-            loop {SACK_FARMIG::*}:
-                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
-            loop {SACK_HUNTING::*}:
-                execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
-
-function sack_pickup(who: player, id: string, amount: number, limit: number):
-    #set {_id} to raw name of {_item}
-    set {_id} to "sack.%{_id}%"
-    #replace all "minecraft:" in {_id} with ""
-    set {_current_amount} to getSscore({_who}, {_id})
-    if {_current_amount} + {_amount} <= {_limit}:
-        execute console command "/sscore add number %{_who}% %{_id}% %{_amount}%"
-        play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
-    else:
-        set {_free_space} to {_limit} - {_current_amount}
-        set {_diff} to {_amount} - {_free_space}
-        set {_item} to {_id}
-        replace all "_" in {_item} with " "
-        set {_item} to {_item} parsed as item
-        give {_who} {_diff} of {_item}
-        set {_pitch} to random number from 1 to 1.7
-        play sound "entity.item.pickup" with volume 1 with pitch {_pitch} for {_who}
-        if {_free_space} != 0:
-            set item amount of {_item} to {_diff}
-            execute console command "/sscore add number %{_who}% %{_id}% %{_free_space}%"
-            play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
-
-function sack_capacity(who: player):
+#get free space of item in sack
+function getSackFreeSpace(who: player, category: string, id: string) :: number:
     set {_i} to 0
-    execute console command "/sscore set number %{_who}% sack.capacity.mining 0"
-    execute console command "/sscore set number %{_who}% sack.capacity.farming 0"
-    execute console command "/sscore set number %{_who}% sack.capacity.hunting 0"
+    set {_capacity_mining} to 0
+    set {_capacity_farming} to 0
+    set {_capacity_hunting} to 0
+    #amount in sack
+    set {_result} to getSscore("%{_who}%", "sack.%{_id}%") parsed as number
+    #parse whole inventory
     while {_i} < 42:
         if raw name of slot {_i} of {_who} is "minecraft:recovery_compass":
             set {_CustomModelData} to custom model data of slot {_i} of {_who}
@@ -68,34 +27,49 @@ function sack_capacity(who: player):
                 replace "&7Лимит на ресурс: &a" in {_item_limit} with ""
                 set {_item_limit} to {_item_limit} parsed as number
                 if {_CustomModelData} start with "16001":
-                    execute console command "/sscore add number %{_who}% sack.capacity.mining %{_item_limit}%"
+                    set {_capacity_mining} to {_capacity_mining} + {_item_limit}
                 else if {_CustomModelData} start with "16002":
-                    execute console command "/sscore add number %{_who}% sack.capacity.farming %{_item_limit}%"
+                    set {_capacity_farming} to {_capacity_farming} + {_item_limit}
                 else if {_CustomModelData} start with "16003":
-                    execute console command "/sscore add number %{_who}% sack.capacity.hunting %{_item_limit}%"
+                    set {_capacity_hunting} to {_capacity_hunting} + {_item_limit}
                 else if {_CustomModelData} start with "16004":
-                    execute console command "/sscore add number %{_who}% sack.capacity.mining %{_item_limit}%"
-                    execute console command "/sscore add number %{_who}% sack.capacity.farming %{_item_limit}%"
-                    execute console command "/sscore add number %{_who}% sack.capacity.hunting %{_item_limit}%"
+                    set {_capacity_mining} to {_capacity_mining} + {_item_limit}
+                    set {_capacity_farming} to {_capacity_farming} + {_item_limit}
+                    set {_capacity_hunting} to {_capacity_hunting} + {_item_limit}
         set {_i} to {_i} + 1
+    #whole space - amount in sack = result
+    if {_category} is "mining":
+        set {_result} to {_capacity_mining} - {_result}
+    else if {_category} is "farming":
+        set {_result} to {_capacity_farming} - {_result}
+    else if {_category} is "hunting":
+        set {_result} to {_capacity_hunting} - {_result}
+    return {_result}
 
-every 5 minutes:
+function applyCache():
     loop all players:
-        sack_capacity(loop-player)
-
-every 1 minute:
-    loop all players:
-        loop {!cache::%{SERVER}%::%loop-player%::*}:
+        #loop through items
+        loop {!cache::%{SERVER}%::%loop-player%::sack::*}:
+            #get category of item
             if {SACK_MINING::*} contains loop-index:
                 set {_trigger} to "mining"
             else if {SACK_FARMING::*} contains loop-index:
                 set {_trigger} to "farming"
             else if {SACK_HUNTING::*} contains loop-index:
                 set {_trigger} to "hunting"
-            set {_capacity} to getSscore("%loop-player%", "sack.capacity.%{_trigger}%") parsed as number
-            message "%loop-player% %loop-index% %{!cache::%{SERVER}%::%loop-player%::%loop-index%}% %{_capacity}%" to console
-            sack_pickup(loop-player, loop-index, {!cache::%{SERVER}%::%loop-player%::%loop-index%}, {_capacity})
-            delete {!cache::%{SERVER}%::%loop-player%::%loop-index%}
+            #add to yaml-scores
+            execute console command "/sscore add number %loop-player% sack.%loop-index% %{!cache::%{SERVER}%::%loop-player%::sack::%loop-index%}%"
+            #delete cache
+            delete {!cache::%{SERVER}%::%loop-player%::sack::%loop-index%}
+        #loop through item limits
+        loop {!cache::%{SERVER}%::%loop-player%::limit::*}:
+            delete {!cache::%{SERVER}%::%loop-player%::limit::%loop-index%}
+
+on inventory open:
+    applyCache()
+
+every 5 minutes:
+    applyCache()
 
 on player picking up:
     set {_item_type} to type of event-item
@@ -107,7 +81,7 @@ on player picking up:
     if raw name of player's offhand item is "minecraft:recovery_compass":
         if custom model data of event-item is 0:
             if {_CustomModelData} start with "1600":
-                set {_trigger} to "none"
+                #choise item category
                 if {_CustomModelData} start with "16001":
                     if {SACK_MINING::*} contains "%{_id}%":
                         set {_trigger} to "mining"
@@ -124,13 +98,38 @@ on player picking up:
                         set {_trigger} to "farming"
                     else if {SACK_HUNTING::*} contains "%{_id}%":
                         set {_trigger} to "hunting"
-                if {_trigger} isn't "none":
-                    if {!cache::%{SERVER}%::%player%::%{_id}%} isn't set:
-                        set {!cache::%{SERVER}%::%player%::%{_id}%} to {_item_amount}
-                    else:
-                        set {!cache::%{SERVER}%::%player%::%{_id}%} to {!cache::%{SERVER}%::%player%::%{_id}%} + {_item_amount}
-                    message "Sucked %{_id}%: %{!cache::%{SERVER}%::%player%::%{_id}%}%" to console
-                    #sack_pickup(player, event-item, {_item_amount}, getSscore("%player%", "sack.capacity.%{_trigger}%") parsed as number)
-                    delete event-dropped item
-                    cancel event
-
+                
+                if {_trigger} is set:
+                    #set item limit cache
+                    if {!cache::%{SERVER}%::%player%::limit::%{_id}%} isn't set:
+                        set {!cache::%{SERVER}%::%player%::limit::%{_id}%} to getSackFreeSpace(event-player, {_trigger}, {_id})
+                    
+                    #if sack have enough space for item
+                    if {!cache::%{SERVER}%::%player%::limit::%{_id}%} >= {_item_amount}:
+                        #set item cache and add item amount
+                        if {!cache::%{SERVER}%::%player%::sack::%{_id}%} isn't set:
+                            set {!cache::%{SERVER}%::%player%::sack::%{_id}%} to {_item_amount}
+                        else:
+                            set {!cache::%{SERVER}%::%player%::sack::%{_id}%} to {!cache::%{SERVER}%::%player%::sack::%{_id}%} + {_item_amount}
+                        #remove item amount from item limit in sack
+                        set {!cache::%{SERVER}%::%player%::limit::%{_id}%} to {!cache::%{SERVER}%::%player%::limit::%{_id}%} - {_item_amount}
+                        play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
+                        delete event-dropped item
+                        cancel event
+                    else if {!cache::%{SERVER}%::%player%::limit::%{_id}%} < {_item_amount}:
+                        #calculate amount of item on the groud after sack trigger
+                        set {_rest} to {_item_amount} - {!cache::%{SERVER}%::%player%::limit::%{_id}%}
+                        
+                        if {!cache::%{SERVER}%::%player%::limit::%{_id}%} > 0:
+                            #set item cache
+                            if {!cache::%{SERVER}%::%player%::sack::%{_id}%} isn't set:
+                                set {!cache::%{SERVER}%::%player%::sack::%{_id}%} to {!cache::%{SERVER}%::%player%::limit::%{_id}%}
+                            else:
+                                set {!cache::%{SERVER}%::%player%::sack::%{_id}%} to {!cache::%{SERVER}%::%player%::sack::%{_id}%} + {!cache::%{SERVER}%::%player%::limit::%{_id}%}
+                            #limit after trigger always 0
+                            set {!cache::%{SERVER}%::%player%::limit::%{_id}%} to 0
+                            delete event-dropped item
+                            #impossible to change amount of event-item so delete them dropped new one
+                            drop {_rest} of event-item at player without velocity
+                            play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
+                            cancel event
