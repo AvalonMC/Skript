@@ -48,10 +48,10 @@ on placeholderapi placeholder request for the prefix "info":
 on placeholderapi placeholder request for the prefix "region":
     if identifier matches "check":
         set {_result} to ""
-        loop {!coords_x::*}:
-            set {_x} to x position of player's location + {!coords_x::%loop-index%}
-            set {_y} to y position of player's location + {!coords_y::%loop-index%}
-            set {_z} to z position of player's location + {!coords_z::%loop-index%}
+        loop {COORDS_X::*}:
+            set {_x} to x position of player's location + {COORDS_X::%loop-index%}
+            set {_y} to y position of player's location + {COORDS_Y::%loop-index%}
+            set {_z} to z position of player's location + {COORDS_Z::%loop-index%}
             set {_temp_loc} to the location at floor({_x}), floor({_y}), floor({_z}) in world world
             if "%region at {_temp_loc}%" isn't "<none>":
                 set {_result} to "%region at {_temp_loc}%"

@@ -1,36 +1,36 @@
 on load:
-    set {!world} to "plugins/WorldGuard/worlds/world/regions.yml"
-    set {!nether} to "plugins/WorldGuard/worlds/world_nether/regions.yml"
-    set {!end} to "plugins/WorldGuard/worlds/world_the_end/regions.yml"
-    set {!coords_x::*} to 0, 10, -10, 0, 0, 10,-10, 0, 0, 0, 0, 0, 20,-20, 0, 0, 20,-20, 0, 0, 0, 0, 0, 30, -30, 0, 0, 30, -30, 0, 0, 0, 0, 0, 40, -40, 0, 0, 40, -40, 0, 0, 0 and 0
-    set {!coords_y::*} to 0, 10, 10, 10, 10, 0, 0, -10, 10, 0, 0, 0, 20, -20, 20, 20, 0, 0, -20, 20, 0, 0, 0, 30, 30, 30, 30, 0, 0,-30, 30, 0, 0, 0, 40,-40, 40, 40, 0, 0,-40, 40, 0 and 0
-    set {!coords_z::*} to 0, 0, 0, 10, -10, 0, 0, 0, 0, 10,-10, 0, 0, 0, 20, -20, 0, 0, 0, 0, 20, -20, 0, 0, 0, 30, -30, 0, 0, 0, 0, 30, -30, 0, 0, 0, 40, -40, 0, 0, 0, 0, 40 and -40
+    set {WORLD} to "plugins/WorldGuard/worlds/world/regions.yml"
+    set {NETHER} to "plugins/WorldGuard/worlds/world_nether/regions.yml"
+    set {END} to "plugins/WorldGuard/worlds/world_the_end/regions.yml"
+    set {COORDS_X::*} to 0, 10, -10, 0, 0, 10,-10, 0, 0, 0, 0, 0, 20,-20, 0, 0, 20,-20, 0, 0, 0, 0, 0, 30, -30, 0, 0, 30, -30, 0, 0, 0, 0, 0, 40, -40, 0, 0, 40, -40, 0, 0, 0 and 0
+    set {COORDS_Y::*} to 0, 10, 10, 10, 10, 0, 0, -10, 10, 0, 0, 0, 20, -20, 20, 20, 0, 0, -20, 20, 0, 0, 0, 30, 30, 30, 30, 0, 0,-30, 30, 0, 0, 0, 40,-40, 40, 40, 0, 0,-40, 40, 0 and 0
+    set {COORDS_Z::*} to 0, 0, 0, 10, -10, 0, 0, 0, 0, 10,-10, 0, 0, 0, 20, -20, 0, 0, 0, 0, 20, -20, 0, 0, 0, 30, -30, 0, 0, 0, 0, 30, -30, 0, 0, 0, 40, -40, 0, 0, 0, 0, 40 and -40
 
 function getRegionsAmount(playerName: player) :: number:
     set {_playerUUID} to uuid of {_playerName}
-    if file {world} doesn't exist:
+    if file {WORLD} doesn't exist:
         message "Regions file of world is missing!" to console
-    if file {nether} doesn't exist:
+    if file {NETHER} doesn't exist:
         message "Regions file of world_nether is missing!" to console
-    if file {end} doesn't exist:
+    if file {END} doesn't exist:
         message "Regions file of world_the_end is missing!" to console
-    set {_regions_world::*} to yml node keys "regions" from file {!world}
-    set {_regions_nether::*} to yml node keys "regions" from file {!nether}
-    set {_regions_end::*} to yml node keys "regions" from file {!end}
+    set {_regions_world::*} to yml node keys "regions" from file {WORLD}
+    set {_regions_nether::*} to yml node keys "regions" from file {NETHER}
+    set {_regions_end::*} to yml node keys "regions" from file {END}
     set {_playerRegionsCount} to 0
     loop {_regions_world::*}:
         if loop-value partially match "owners.unique-ids":
-            set {_region::*} to yml list "regions.%loop-value%" from file {!world}
+            set {_region::*} to yml list "regions.%loop-value%" from file {WORLD}
             if {_region::1} partially match {_playerUUID}:
                 set {_playerRegionsCount} to {_playerRegionsCount} + 1
     loop {_regions_nether::*}:
         if loop-value partially match "owners.unique-ids":
-            set {_region::*} to yml list "regions.%loop-value%" from file {!nether}
+            set {_region::*} to yml list "regions.%loop-value%" from file {NETHER}
             if {_region::1} partially match {_playerUUID}:
                 set {_playerRegionsCount} to {_playerRegionsCount} + 1
     loop {_regions_end::*}:
         if loop-value partially match "owners.unique-ids":
-            set {_region::*} to yml list "regions.%loop-value%" from file {!end}
+            set {_region::*} to yml list "regions.%loop-value%" from file {END}
             if {_region::1} partially match {_playerUUID}:
                 set {_playerRegionsCount} to {_playerRegionsCount} + 1
                 

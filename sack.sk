@@ -1,9 +1,11 @@
 on load:
-    set {!sack_mining::*} to "stone", "cobblestone", "deepslate", "cobbled_deepslate", "diorite", "granite", "andesite", "tuff", "calcite", "sand", "sandstone", "red_sand", "red_sandstone", "gravel", "prismarine", "ice", "grass_block", "podzol", "mycelium", "dirt", "moss_block", "mud", "dripstone_block", "brown_terracotta", "red_terracotta", "orange_terracotta", "terracotta", "light_gray_terracotta", "yellow_terracotta", "white_terracotta", "sponge", "wet_sponge", "coal", "raw_copper", "copper_ingot", "raw_iron", "iron_ingot", "raw_gold", "gold_ingot", "diamond", "redstone", "sculk", "snowball", "clay_ball", "prismarine_shard", "prismarine_crystals", "amethyst_shard", "emerald", "lapis_lazuli", "flint", "netherrack", "soul_sand", "soul_soil", "blackstone", "basalt", "magma_block", "nether_brick", "quartz", "gold_nugget", "ancient_debris", "glowstone_dust", "glowstone", "crimson_nylium", "warped_nylium", "shroomlight", "nether_wart_block", "warped_wart_block", "end_stone", "amethyst_block", "obsidian", "crying_obsidian", "smooth_basalt", "dead_horn_coral_block", "dead_fire_coral_block", "dead_bubble_coral_block", "dead_brain_coral_block" and "dead_tube_coral_block"
+    set {SACK_MINING::*} to "stone", "cobblestone", "deepslate", "cobbled_deepslate", "diorite", "granite", "andesite", "tuff", "calcite", "sand", "sandstone", "red_sand", "red_sandstone", "gravel", "prismarine", "ice", "grass_block", "podzol", "mycelium", "dirt", "moss_block", "mud", "dripstone_block", "brown_terracotta", "red_terracotta", "orange_terracotta", "terracotta", "light_gray_terracotta", "yellow_terracotta", "white_terracotta", "sponge", "wet_sponge", "coal", "raw_copper", "copper_ingot", "raw_iron", "iron_ingot", "raw_gold", "gold_ingot", "diamond", "redstone", "sculk", "snowball", "clay_ball", "prismarine_shard", "prismarine_crystals", "amethyst_shard", "emerald", "lapis_lazuli", "flint", "netherrack", "soul_sand", "soul_soil", "blackstone", "basalt", "magma_block", "nether_brick", "quartz", "gold_nugget", "ancient_debris", "glowstone_dust", "glowstone", "crimson_nylium", "warped_nylium", "shroomlight", "nether_wart_block", "warped_wart_block", "end_stone", "amethyst_block", "obsidian", "crying_obsidian", "smooth_basalt", "dead_horn_coral_block", "dead_fire_coral_block", "dead_bubble_coral_block", "dead_brain_coral_block" and "dead_tube_coral_block"
     
-    set {!sack_farming::*} to "oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log", "warped_stem", "crimson_stem", "bamboo", "cactus", "kelp", "azalea", "flowering_azalea", "wheat", "potato", "carrot", "beetroot", "pumpkin", "melon_slice", "chorus_fruit", "nether_wart", "apple", "wheat_seeds", "cocoa_beans", "brown_mushroom", "beetroot_seeds", "pumpkin_seeds", "melon_seeds", "sugar_cane", "glow_berries", "sweet_berries", "cod", "salmon", "red_mushroom", "chicken", "rabbit", "mutton", "porkchop", "beef", "milk_bucket", "oak_sapling", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "mangrove_propagule", "cherry_sapling", "warped_fungus", "crimson_fungus", "lily_pad", "vine", "wither_rose", "glow_lichen" and "sea_pickle"
+    set {SACK_FARMIG::*} to "oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log", "warped_stem", "crimson_stem", "bamboo", "cactus", "kelp", "azalea", "flowering_azalea", "wheat", "potato", "carrot", "beetroot", "pumpkin", "melon_slice", "chorus_fruit", "nether_wart", "apple", "wheat_seeds", "cocoa_beans", "brown_mushroom", "beetroot_seeds", "pumpkin_seeds", "melon_seeds", "sugar_cane", "glow_berries", "sweet_berries", "cod", "salmon", "red_mushroom", "chicken", "rabbit", "mutton", "porkchop", "beef", "milk_bucket", "oak_sapling", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling", "mangrove_propagule", "cherry_sapling", "warped_fungus", "crimson_fungus", "lily_pad", "vine", "wither_rose", "glow_lichen" and "sea_pickle"
     
-    set {!sack_hunting::*} to "rotten_flesh", "bone", "spider_eye", "string", "gunpowder", "ender_pearl", "phantom_membrane", "slime_ball", "glow_ink_sac", "leather", "rabbit_hide", "blaze_rod", "magma_cream", "ghast_tear", "shulker_shell", "dragon_breath", "honey_bottle", "ink_sac", "honeycomb", "scute", "pufferfish", "feather", "nautilus_shell", "sniffer_egg", "turtle_egg", "egg" and "echo_shard"
+    set {SACK_HUNTING::*} to "rotten_flesh", "bone", "spider_eye", "string", "gunpowder", "ender_pearl", "phantom_membrane", "slime_ball", "glow_ink_sac", "leather", "rabbit_hide", "blaze_rod", "magma_cream", "ghast_tear", "shulker_shell", "dragon_breath", "honey_bottle", "ink_sac", "honeycomb", "scute", "pufferfish", "feather", "nautilus_shell", "sniffer_egg", "turtle_egg", "egg" and "echo_shard"
+
+    set {SERVER} to "survival_main"
 
     loop all players:
         sack_capacity(loop-player)
@@ -23,17 +25,17 @@ command /sack <text> <player> [<text>]:
     permission: group.admin
     trigger:
         if arg-1 is "clear":
-            loop {!sack_mining::*}:
+            loop {SACK_MINING::*}:
                 execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
-            loop {!sack_farming::*}:
+            loop {SACK_FARMIG::*}:
                 execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
-            loop {!sack_hunting::*}:
+            loop {SACK_HUNTING::*}:
                 execute player command "/sscore delete anything %arg-2% sack.%loop-value%"
 
-function sack_pickup(who: player, item: item, amount: number, limit: number):
-    set {_id} to raw name of {_item}
+function sack_pickup(who: player, id: string, amount: number, limit: number):
+    #set {_id} to raw name of {_item}
     set {_id} to "sack.%{_id}%"
-    replace all "minecraft:" in {_id} with ""
+    #replace all "minecraft:" in {_id} with ""
     set {_current_amount} to getSscore({_who}, {_id})
     if {_current_amount} + {_amount} <= {_limit}:
         execute console command "/sscore add number %{_who}% %{_id}% %{_amount}%"
@@ -41,6 +43,9 @@ function sack_pickup(who: player, item: item, amount: number, limit: number):
     else:
         set {_free_space} to {_limit} - {_current_amount}
         set {_diff} to {_amount} - {_free_space}
+        set {_item} to {_id}
+        replace all "_" in {_item} with " "
+        set {_item} to {_item} parsed as item
         give {_who} {_diff} of {_item}
         set {_pitch} to random number from 1 to 1.7
         play sound "entity.item.pickup" with volume 1 with pitch {_pitch} for {_who}
@@ -78,6 +83,20 @@ every 5 minutes:
     loop all players:
         sack_capacity(loop-player)
 
+every 1 minute:
+    loop all players:
+        loop {!cache::%{SERVER}%::%loop-player%::*}:
+            if {SACK_MINING::*} contains loop-index:
+                set {_trigger} to "mining"
+            else if {SACK_FARMING::*} contains loop-index:
+                set {_trigger} to "farming"
+            else if {SACK_HUNTING::*} contains loop-index:
+                set {_trigger} to "hunting"
+            set {_capacity} to getSscore("%loop-player%", "sack.capacity.%{_trigger}%") parsed as number
+            message "%loop-player% %loop-index% %{!cache::%{SERVER}%::%loop-player%::%loop-index%}% %{_capacity}%" to console
+            sack_pickup(loop-player, loop-index, {!cache::%{SERVER}%::%loop-player%::%loop-index%}, {_capacity})
+            delete {!cache::%{SERVER}%::%loop-player%::%loop-index%}
+
 on player picking up:
     set {_item_type} to type of event-item
     set {_item_amount} to item amount of event-item
@@ -85,28 +104,33 @@ on player picking up:
     replace all "minecraft:" in {_id} with ""
     set {_CustomModelData} to custom model data of player's offhand item
     set {_CustomModelData} to "%{_CustomModelData}%"
-    if raw name of player's offhand item is "recovery_compass":
+    if raw name of player's offhand item is "minecraft:recovery_compass":
         if custom model data of event-item is 0:
             if {_CustomModelData} start with "1600":
                 set {_trigger} to "none"
                 if {_CustomModelData} start with "16001":
-                    if {!sack_mining::*} contains "%{_id}%":
+                    if {SACK_MINING::*} contains "%{_id}%":
                         set {_trigger} to "mining"
                 else if {_CustomModelData} start with "16002":
-                    if {!sack_farming::*} contains "%{_id}%":
+                    if {SACK_FARMING::*} contains "%{_id}%":
                         set {_trigger} to "farming"
                 else if {_CustomModelData} start with "16003":
-                    if {!sack_hunting::*} contains "%{_id}%":
+                    if {SACK_HUNTING::*} contains "%{_id}%":
                         set {_trigger} to "hunting"
                 else if {_CustomModelData} start with "16004":
-                    if {!sack_mining::*} contains "%{_id}%":
+                    if {SACK_MINING::*} contains "%{_id}%":
                         set {_trigger} to "mining"
-                    else if {!sack_farming::*} contains "%{_id}%":
+                    else if {SACK_FARMING::*} contains "%{_id}%":
                         set {_trigger} to "farming"
-                    else if {!sack_hunting::*} contains "%{_id}%":
+                    else if {SACK_HUNTING::*} contains "%{_id}%":
                         set {_trigger} to "hunting"
                 if {_trigger} isn't "none":
-                    sack_pickup(player, event-item, {_item_amount}, getSscore("%player%", "sack.capacity.%{_trigger}%") parsed as number)
+                    if {!cache::%{SERVER}%::%player%::%{_id}%} isn't set:
+                        set {!cache::%{SERVER}%::%player%::%{_id}%} to {_item_amount}
+                    else:
+                        set {!cache::%{SERVER}%::%player%::%{_id}%} to {!cache::%{SERVER}%::%player%::%{_id}%} + {_item_amount}
+                    message "Sucked %{_id}%: %{!cache::%{SERVER}%::%player%::%{_id}%}%" to console
+                    #sack_pickup(player, event-item, {_item_amount}, getSscore("%player%", "sack.capacity.%{_trigger}%") parsed as number)
                     delete event-dropped item
                     cancel event
 

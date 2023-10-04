@@ -1,20 +1,20 @@
 on load:
-    set {!restartTime} to now formatted as "HH"
-    set {!votes} to 0
-    set {!today} to 0
-    set {!place} to 0
-    set {!chance} to 0
+    set {restartTime} to now formatted as "HH"
+    set {votes} to 0
+    set {today} to 0
+    set {place} to 0
+    set {chance} to 0
 
-    if {!restartTime} is "04":
+    if {restartTime} is "04":
         execute console command "/sscore set number ##server monitoring.votes 0"
         execute console command "/sscore set number ##server monitoring.today 0"
         execute console command "/sscore set number ##server monitoring.place 0"
         execute console command "/sscore set number ##server monitoring.chance 0"
     else:
-        set {!votes} to getSscore("##server", "monitoring.votes") parsed as number
-        set {!today} to getSscore("##server", "monitoring.today") parsed as number
-        set {!place} to getSscore("##server", "monitoring.place") parsed as number
-        set {!chance} to getSscore("##server", "monitoring.chance") parsed as number
+        set {votes} to getSscore("##server", "monitoring.votes") parsed as number
+        set {today} to getSscore("##server", "monitoring.today") parsed as number
+        set {place} to getSscore("##server", "monitoring.place") parsed as number
+        set {chance} to getSscore("##server", "monitoring.chance") parsed as number
     
     execute console command "/monitoring_votes"
 
@@ -29,34 +29,34 @@ command /monitoring_votes:
         
         set {_splited::*} to {_body} split at "<strong>"
         set {_splited::*} to {_splited::3} split at "</strong>"
-        set {!place} to {_splited::1}
-        if {!place} is "&gt;200":
-            set {!place} to 201
+        set {place} to {_splited::1}
+        if {place} is "&gt;200":
+            set {place} to 201
         else:
-            set {!place} to {!place} parsed as number
+            set {place} to {place} parsed as number
         
         set {_splited::*} to {_body} split at "Голосов:</td><td><meta content="""
         set {_splited::*} to {_splited::2} split at """>"
-        set {!votes} to {_splited::1} parsed as number
+        set {votes} to {_splited::1} parsed as number
         
-        if {!restartTime} is "04":
-            set {!today} to {!votes}
+        if {restartTime} is "04":
+            set {today} to {votes}
         else:
-            set {!today} to getSscore("##server", "monitoring.today") parsed as number
+            set {today} to getSscore("##server", "monitoring.today") parsed as number
         
-        set {_votesDiff} to {!votes} - {!today}
+        set {_votesDiff} to {votes} - {today}
         
         set {_chanceDiff} to 0
         
         if {_votesDiff} isn't 0:
             set {_floorVar} to floor(({_votesDiff} - 1) / 5)
             set {_moduloVar} to mod({_votesDiff} - 1, 5)
-            set {!chance} to min(max(1,{_votesDiff}),1)*(min({_votesDiff},5)+min(1,{_floorVar})*(5*(1-0.5^({_floorVar}-1))+({_moduloVar}+1)*0.5^({_floorVar})))
-            set {_chanceDiff} to {!chance} - getSscore("##server", "monitoring.chance") parsed as number
+            set {chance} to min(max(1,{_votesDiff}),1)*(min({_votesDiff},5)+min(1,{_floorVar})*(5*(1-0.5^({_floorVar}-1))+({_moduloVar}+1)*0.5^({_floorVar})))
+            set {_chanceDiff} to {chance} - getSscore("##server", "monitoring.chance") parsed as number
         
         if {_chanceDiff} isn't 0:
-            execute console command "/sscore set number ##server monitoring.votes %{!votes}%"
-            execute console command "/sscore set number ##server monitoring.today %{!today}%"
-            execute console command "/sscore set number ##server monitoring.place %{!place}%"
-            execute console command "/sscore set number ##server monitoring.chance %{!chance}%"
-            send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7!" to players
+            execute console command "/sscore set number ##server monitoring.votes %{votes}%"
+            execute console command "/sscore set number ##server monitoring.today %{today}%"
+            execute console command "/sscore set number ##server monitoring.place %{place}%"
+            execute console command "/sscore set number ##server monitoring.chance %{chance}%"
+            send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7" to players

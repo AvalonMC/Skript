@@ -1,6 +1,6 @@
 sack:
   cobblestone: 1280.0
-  stone: 128.0
+  stone: 452.0
   gravel: 192.0
   sand: 192.0
   grass_block: 64.0
@@ -12,6 +12,9 @@ sack:
   orange_terracotta: 1.0
   dirt: 128.0
   capacity:
-    mining: 90112.0
-    farming: 67584.0
+    mining: 65536.0
+    farming: 65536.0
     hunting: 65536.0
+  <none>: 256.0
+forge:
+  menu: sack_mining_medium
