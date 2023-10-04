@@ -4,6 +4,7 @@ on load:
     if {restartTime} isn't "05":
         set {votes} to getSscore("##server", "monitoring.votes") parsed as number
         set {today} to getSscore("##server", "monitoring.today") parsed as number
+        set {diff} to getSscore("##server", "monitoring.diff") parsed as number
         set {place} to getSscore("##server", "monitoring.place") parsed as number
         set {chance} to getSscore("##server", "monitoring.chance") parsed as number
     
@@ -50,6 +51,7 @@ command /monitoring_votes:
         
         execute console command "/sscore set number ##server monitoring.votes %{votes}%"
         execute console command "/sscore set number ##server monitoring.today %{today}%"
+        execute console command "/sscore set number ##server monitoring.today %{_votesDiff}%"
         execute console command "/sscore set number ##server monitoring.place %{place}%"
         execute console command "/sscore set number ##server monitoring.chance %{chance}%"
         

@@ -1,24 +1,6 @@
-sack:
-  cobblestone: 65536.0
-  stone: 4422.0
-  gravel: 192.0
-  sand: 192.0
-  grass_block: 64.0
-  terracotta: 1.0
-  white_terracotta: 1.0
-  light_gray_terracotta: 1.0
-  red_terracotta: 1.0
-  yellow_terracotta: 1.0
-  orange_terracotta: 1.0
-  dirt: 128.0
-  capacity:
-    mining: 65536.0
-    farming: 65536.0
-    hunting: 65536.0
-  <none>: 256.0
-  deepslate: 64.0
-  emerald: 64.0
-  gold_ingot: 48.0
-  tuff: 1344.0
 forge:
-  menu: sack_mining_medium
+  anvil: true
+  menu: sack_mining_large
+sack:
+  obsidian: 256.0
+  bone: 64.0

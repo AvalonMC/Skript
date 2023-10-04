@@ -1,0 +1,14 @@
+#kostili
+command /take_item <player> <text> <number> [<number>]:
+    description: "/take_item player id amount CustomModelData"
+    trigger:
+        set {_item} to arg-2
+        replace all "_" in {_item} with " "
+        set {_item} to {_item} parsed as item
+        if arg-4 is set:
+            remove arg-3 {_item} from the player's inventory
+            #remove arg-3 {_item} from the inventory of arg-1
+        else:
+            remove arg-3 {_item} from the player's inventory
+            #remove arg-3 {_item} with custom model data arg-4 from the inventory of arg-1
+

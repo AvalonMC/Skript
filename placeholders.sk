@@ -15,7 +15,7 @@ on placeholderapi placeholder request for the prefix "info":
     if identifier matches "chance":
         set the result to getSscore("##server", "monitoring.chance")
     else if identifier matches "votes":
-        set the result to getSscore("##server", "monitoring.today")
+        set the result to getSscore("##server", "monitoring.diff")
 
     else if identifier matches "hours":
         set {_hours} to placeholder "objective_score_hours" from player parsed as number
