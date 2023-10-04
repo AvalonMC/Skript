@@ -2,12 +2,10 @@ on load:
     set {restartTime} to now formatted as "HH"
 
     if {restartTime} isn't "05":
-        message "Sosi1" to console
         set {votes} to getSscore("##server", "monitoring.votes") parsed as number
         set {today} to getSscore("##server", "monitoring.today") parsed as number
         set {place} to getSscore("##server", "monitoring.place") parsed as number
         set {chance} to getSscore("##server", "monitoring.chance") parsed as number
-        message "Sosi1: votes: %{votes}%; today: %{today}%; place: %{place}%; chance: %{chance}%;" to console
     
     execute console command "/monitoring_votes"
 
@@ -16,7 +14,6 @@ at 0:00 in "world":
 
 command /monitoring_votes:
     trigger:
-        message "Recalculate votes" to console
         send a "get" request to "https://minecraftrating.ru/server/avalon/"
         set {_response} to the last http response
         set {_body} to body of {_response}
@@ -34,13 +31,9 @@ command /monitoring_votes:
         set {votes} to {_splited::1} parsed as number
         
         if {restartTime} is "05":
-            message "Pisos" to console
             set {today} to {votes}
         else:
-            message "Sois" to console
-            message "%{today}%" to console
             set {today} to getSscore("##server", "monitoring.today") parsed as number
-            message "%{today}%" to console
         
         set {_votesDiff} to {votes} - {today}
         
@@ -62,5 +55,3 @@ command /monitoring_votes:
         
         if {_chanceDiff} isn't 0:
             send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7" to players
-        
-        message "Result: restart hour: %{restartTime}% now %now formatted as "HH"% votes: %{votes}%; today: %{today}%; place: %{place}%; chance: %{chance}%; chance diff: %{_chanceDiff}%" to console
