@@ -1,6 +1,6 @@
 forge:
   anvil: true
-  menu: sack_mining_large
+  menu: super_strong_anvil
 sack:
   obsidian: 256.0
   bone: 64.0
