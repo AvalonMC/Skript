@@ -23,7 +23,7 @@ function getSackFreeSpace(who: player, category: string, id: string) :: number:
             set {_CustomModelData} to custom model data of slot {_i} of {_who}
             set {_CustomModelData} to "%{_CustomModelData}%"
             if {_CustomModelData} start with "1600":
-                set {_item_limit} to line 4 of lore of slot {_i} of {_who}
+                set {_item_limit} to line 5 of lore of slot {_i} of {_who}
                 replace "&7Лимит на ресурс: &a" in {_item_limit} with ""
                 set {_item_limit} to {_item_limit} parsed as number
                 if {_CustomModelData} start with "16001":
