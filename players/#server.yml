@@ -1,5 +1,6 @@
 monitoring:
   today: 29
-  chance: 1
-  votes: 30
-  place: 174
+  chance: 2
+  votes: 31
+  place: 172
+  diff: 2

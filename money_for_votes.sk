@@ -1,7 +1,7 @@
 on load:
     set {restartTime} to now formatted as "HH"
 
-    if {restartTime} isn't "05":
+    if {restartTime} isn't "04":
         set {votes} to getSscore("##server", "monitoring.votes") parsed as number
         set {today} to getSscore("##server", "monitoring.today") parsed as number
         set {diff} to getSscore("##server", "monitoring.diff") parsed as number
@@ -31,7 +31,7 @@ command /monitoring_votes:
         set {_splited::*} to {_splited::2} split at """>"
         set {votes} to {_splited::1} parsed as number
         
-        if {restartTime} is "05":
+        if {restartTime} is "04":
             set {today} to {votes}
         else:
             set {today} to getSscore("##server", "monitoring.today") parsed as number
@@ -51,7 +51,7 @@ command /monitoring_votes:
         
         execute console command "/sscore set number ##server monitoring.votes %{votes}%"
         execute console command "/sscore set number ##server monitoring.today %{today}%"
-        execute console command "/sscore set number ##server monitoring.today %{_votesDiff}%"
+        execute console command "/sscore set number ##server monitoring.diff %{_votesDiff}%"
         execute console command "/sscore set number ##server monitoring.place %{place}%"
         execute console command "/sscore set number ##server monitoring.chance %{chance}%"
         

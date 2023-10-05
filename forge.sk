@@ -1,14 +1,30 @@
 #kostili
-command /take_item <player> <text> <number> [<number>]:
-    description: "/take_item player id amount CustomModelData"
+command /take_item <player> <text> <number> [<number>] [<text>]:
+    description: "/take_item player id amount CustomModelData line string"
     trigger:
-        set {_item} to arg-2
-        replace all "_" in {_item} with " "
-        set {_item} to {_item} parsed as item
-        if arg-4 is set:
-            remove arg-3 {_item} from the player's inventory
-            #remove arg-3 {_item} from the inventory of arg-1
-        else:
-            remove arg-3 {_item} from the player's inventory
-            #remove arg-3 {_item} with custom model data arg-4 from the inventory of arg-1
-
+        #message "Start" to console
+        set {_i} to 0
+        while {_i} < 42:
+            if raw name of slot {_i} of arg-1 is "minecraft:%arg-2%":
+                #message "Found slot" to console
+                set {_amount} to item amount of slot {_i} of arg-1
+                set {_cmd} to custom model data of slot {_i} of arg-1
+                set {_lore::*} to lore of slot {_i} of arg-1
+                if {_amount} >= arg-3:
+                    #message "Found amount" to console
+                    if arg-4 is set:
+                        if arg-4 is {_cmd}:
+                            #message "Found CustomModelData" to console
+                            if arg-5 is set:
+                                set {_loreJoined} to join {_lore::*} with ";"
+                                if {_loreJoined} partially match arg-5:
+                                    #message "Found lore" to console
+                                    set item amount of slot {_i} of arg-1 to {_amount} - arg-3
+                                    exit
+                            else: 
+                                set item amount of slot {_i} of arg-1 to {_amount} - arg-3
+                                exit
+                    else: 
+                        set item amount of slot {_i} of arg-1 to {_amount} - arg-3
+                        exit
+            set {_i} to {_i} + 1

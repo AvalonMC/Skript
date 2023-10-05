@@ -128,7 +128,7 @@ on player picking up:
                             #limit after trigger always 0
                             set {!cache::%{SERVER}%::%player%::limit::%{_id}%} to 0
                             delete event-dropped item
-                            #impossible to change amount of event-item so delete them dropped new one
+                            #impossible to change amount of event-item so delete them and dropped new one
                             drop {_rest} of event-item at player without velocity
                             play sound "entity.sniffer.sniffing" in player category with volume 1 with pitch 2 for {_who}
                             cancel event

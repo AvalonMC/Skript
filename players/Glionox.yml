@@ -4,3 +4,5 @@ forge:
 sack:
   obsidian: 256.0
   bone: 64.0
+  carrot: 64.0
+  gravel: 704.0
