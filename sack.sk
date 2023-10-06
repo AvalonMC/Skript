@@ -70,6 +70,20 @@ on inventory open:
 
 every 5 minutes:
     applyCache()
+    applyCache()
+
+on right mouse click holding recovery compass:
+    set {_CustomModelData} to custom model data of event-item
+    set {_CustomModelData} to "%{_CustomModelData}%"
+    if {_CustomModelData} start with "1600":
+        if {_CustomModelData} start with "16001":
+            execute console command "openmenu sack_mining.yml %event-player%"
+        else if {_CustomModelData} start with "16002":
+            execute console command "openmenu sack_farming.yml %event-player%"
+        else if {_CustomModelData} start with "16003":
+            execute console command "openmenu sack_hunting.yml %event-player%"
+        else if {_CustomModelData} start with "16004":
+            execute console command "openmenu sack_universal.yml %event-player%"
 
 on player picking up:
     set {_item_type} to type of event-item
