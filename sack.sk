@@ -65,11 +65,7 @@ function applyCache():
         loop {!cache::%{SERVER}%::%loop-player%::limit::*}:
             delete {!cache::%{SERVER}%::%loop-player%::limit::%loop-index%}
 
-on inventory open:
-    applyCache()
-
 every 5 minutes:
-    applyCache()
     applyCache()
 
 on right mouse click holding recovery compass:
@@ -77,12 +73,16 @@ on right mouse click holding recovery compass:
     set {_CustomModelData} to "%{_CustomModelData}%"
     if {_CustomModelData} start with "1600":
         if {_CustomModelData} start with "16001":
+            applyCache()
             execute console command "openmenu sack_mining.yml %event-player%"
         else if {_CustomModelData} start with "16002":
+            applyCache()
             execute console command "openmenu sack_farming.yml %event-player%"
         else if {_CustomModelData} start with "16003":
+            applyCache()
             execute console command "openmenu sack_hunting.yml %event-player%"
         else if {_CustomModelData} start with "16004":
+            applyCache()
             execute console command "openmenu sack_universal.yml %event-player%"
 
 on player picking up:
