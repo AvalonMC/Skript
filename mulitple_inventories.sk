@@ -1,0 +1,83 @@
+options:
+    # The Version of this skript
+    version: &2v1.0
+
+    # The Prefix before all messages
+    prefix: &7[&3Inventory Manager&7]
+
+    # The colour code used for all messages
+    colorcode: &c
+
+    # The colour used to highlight and show titles etc.
+    highlightcolor: &6
+
+    # The permission message use if the user lacks the permission
+    permisionmessage: {@prefix} {@colorcode}You are not allowed to do that.
+
+command /setinv [<text>]:
+    permission: "inv.save"
+    permission message: "{@permisionmessage}"
+    aliases: setinventory
+    trigger:
+        if argument 1 is not set:
+            make player execute command "inv help"
+            stop
+        add argument 1 to {Inventory.%player%::*}
+        set {_count} to 0
+        loop 36 times:
+            set yml value "%arg-1%.%{_count}%" from file "plugins/Skript/scripts/players/%player%.yml" to {inv.%player%.%{_count}%.%arg 1%}
+            set {inv.%player%.%{_count}%.%arg 1%} to slot {_count} of player's inventory
+            add 1 to {_count}
+        set {inv.%player%.helmet.%arg 1%} to player's helmet
+        set {inv.%player%.chest.%arg 1%} to player's chestplate
+        set {inv.%player%.legs.%arg 1%} to player's leggings
+        set {inv.%player%.feet.%arg 1%} to player's boots
+        message "{@prefix} {@colorcode}Inventory set to %arg 1%"
+        
+command /inv [<text>]:
+    permission: "inv.recall"
+    permission message: "{@permisionmessage}"
+    aliases: inventory
+    trigger:
+        if argument 1 is not set: 
+            size of {Inventory.%player%::*} is 0:
+                message "{@prefix} {@colorcode}You don't have any inventories."
+                stop
+            else:
+                message "{@prefix} {@colorcode}Inventories:"
+                message "{@colorcode}%{Inventory.%player%::*}%"
+                stop
+        if argument 1 is "help":
+            message "{@prefix} {@version} {@highlightcolor}Help Menu"
+            message "{@colorcode}/setinv <name> - {@highlightcolor}Set your current inventory to the name."
+            message "{@colorcode}/inv <name> - {@highlightcolor}Replace your current inventory with the contents of the inventory you name."
+            message "{@colorcode}/delinv <name/all> - {@highlightcolor}Deletes the inventory you name or all your inventories."
+            stop
+        set {_count} to 0
+        loop 36 times:
+            set {_tempItem} to yml value "%arg-1%.%{_count}%" from file "plugins/Skript/scripts/players/%player%.yml"
+            set slot {_count} of player's inventory to {_tempItem}
+            #set slot {_count} of player's inventory to {inv.%player%.%{_count}%.%arg 1%}
+            add 1 to {_count}
+        set the helmet of player to {inv.%player%.helmet.%arg 1%}
+        set the chestplate of player to {inv.%player%.chest.%arg 1%}
+        set the leggings of player to {inv.%player%.legs.%arg 1%}
+        set the boots of player to {inv.%player%.feet.%arg 1%}
+        message "{@prefix} {@colorcode}Your inventory has been changed to %arg 1%."
+        stop
+
+command /delinv [<text>]:
+    permission: "inv.delete"
+    permission message: "{@permisionmessage}"
+    aliases: deleteinventory
+    trigger:
+        if argument 1 is not set:
+            make player execute command "inv help"
+            stop
+        if argument 1 is "all":
+            clear {Inventory.%player%::*}
+            message "{@prefix} {@colorcode}All inventories removed"
+            stop
+        remove argument 1 from {Inventory.%player%::*}
+        message "{@prefix} {@colorcode}Inventory %arg 1% removed"
+        stop
