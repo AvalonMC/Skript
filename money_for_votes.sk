@@ -15,6 +15,7 @@ at 0:00 in "world":
 
 command /monitoring_votes:
     trigger:
+        set {restartTime} to now formatted as "HH"
         send a "get" request to "https://minecraftrating.ru/server/avalon/"
         set {_response} to the last http response
         set {_body} to body of {_response}
@@ -36,14 +37,14 @@ command /monitoring_votes:
         else:
             set {today} to getSscore("##server", "monitoring.today") parsed as number
         
-        set {_votesDiff} to {votes} - {today}
+        set {votesDiff} to {votes} - {today}
         
         set {_chanceDiff} to 0
         
-        if {_votesDiff} isn't 0:
-            set {_floorVar} to floor(({_votesDiff} - 1) / 3)
-            set {_moduloVar} to mod({_votesDiff} - 1, 3)
-            set {chance} to min(max(1,{_votesDiff}),1)*(min({_votesDiff},3)+min(1,{_floorVar})*(3*(1-0.5^({_floorVar}-1))+({_moduloVar}+1)*0.5^({_floorVar})))
+        if {votesDiff} > 0:
+            set {_floorVar} to floor(({votesDiff} - 1) / 3)
+            set {_moduloVar} to mod({votesDiff} - 1, 3)
+            set {chance} to min(max(1,{votesDiff}),1)*(min({votesDiff},3)+min(1,{_floorVar})*(3*(1-0.5^({_floorVar}-1))+({_moduloVar}+1)*0.5^({_floorVar})))
         else:
             set {chance} to 0
         
@@ -51,9 +52,9 @@ command /monitoring_votes:
         
         execute console command "/sscore set number ##server monitoring.votes %{votes}%"
         execute console command "/sscore set number ##server monitoring.today %{today}%"
-        execute console command "/sscore set number ##server monitoring.diff %{_votesDiff}%"
+        execute console command "/sscore set number ##server monitoring.diff %{votesDiff}%"
         execute console command "/sscore set number ##server monitoring.place %{place}%"
         execute console command "/sscore set number ##server monitoring.chance %{chance}%"
         
-        if {_chanceDiff} isn't 0:
+        if {_chanceDiff} > 0.01:
             send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7" to players
