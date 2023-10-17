@@ -1,0 +1,47 @@
+function altar(who: player, startLocation: location, altarBlocks: items, altarInventory: items) :: boolean:
+    set {_matchedTotal} to 0
+    set {_matchedSets} to 0
+    loop {_altarBlocks::*}:
+        add 0 to {_matches::*}
+        add 1 to {_matchedTotal}
+    loop blocks in radius 8 around {_startLocation}:
+        set {_block} to loop-value-1
+        set {_i} to 0
+        while {_i} < {_matchedTotal}:
+            set {_j} to {_i} + 1
+            if {_block} is type of {_altarBlocks::%{_j}%}:
+                message "%{_block}%" to console
+                if {_matches::%{_j}%} < item amount of {_altarBlocks::%{_j}%}:
+                    add 1 to {_matches::%{_j}%}
+                    if {_matches::%{_j}%} = item amount of {_altarBlocks::%{_j}%}:
+                        add 1 to {_matches::%{_j}%}
+                        add 1 to {_matchedSets}
+                if {_matchedSets} = {_matchedTotal}:
+                    loop {_altarInventory::*}:
+                        if {_who} doesn't have loop-value-2:
+                            return false
+                    loop {_altarInventory::*}:
+                        remove loop-value-2 from inventory of {_who}
+                    return true
+            add 1 to {_i}
+    return false
+
+on right click on gold block:
+    set {_blocks::*} to 18 obsidian, 2 diamond block, 5 dirt, 1 gold block and 5 dead bush
+    set {_inventoryItems::*} to 10 redstone, 10 bones, 10 gunpowder and 1 mushroom stew
+    
+    set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
+    if {_altarRes} is true:
+        message "pisos" to event-player
+    else:
+        message "sosi" to event-player
+
+on right click on lapis block:
+    set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
+    set {_inventoryItems::*} to 10 redstone, 10 bones, 10 gunpowder and 1 mushroom stew
+
+    set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
+    if {_altarRes} is true:
+        message "pisos" to event-player
+    else:
+        message "sosi" to event-player

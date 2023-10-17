@@ -23,10 +23,6 @@ on join:
         execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
     if player's name partially matches "loshok":
         execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
-    if player's name partially matches "\d{5,}":
-        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
-    if player's name partially matches "(.)\1{5,}":
-        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
     if player's name start with "asd":
         execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
     if player's name start with "sdf":

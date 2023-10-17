@@ -1,0 +1,22 @@
+on load:
+    set {id::*} to stone, coal ore, iron ore, diamond ore
+    set {weight::*} to 25, 10, 5, 1
+    loop {weight::*}:
+        loop loop-value times:
+            add {id::%loop-index%} to {values::*}
+
+on right click on farmland using pumpkin seeds:
+    if custom model data of event-item is 160001:
+        add event-block to {blocks::*}
+        #message {blocks::*} to console
+
+on block grow:
+    if future event-block is pumpkin:
+        set {_x} to x of vector of location of event-block
+        set {_y} to y of vector of location of event-block
+        set {_z} to z of vector of location of event-block
+        set {_loc} to location at (x = {_x}, y = {_y}, z = {_z} + 1)
+        set {_data} to block data of block at {_loc}
+        #message {_data} to console
+        set future event-block to random element out of {values::*}
+
