@@ -5,8 +5,6 @@ on load:
     
     set {SACK_HUNTING::*} to "rotten_flesh", "bone", "arrow", "spider_eye", "string", "gunpowder", "ender_pearl", "phantom_membrane", "slime_ball", "glow_ink_sac", "leather", "rabbit_hide", "blaze_rod", "magma_cream", "ghast_tear", "shulker_shell", "dragon_breath", "honey_bottle", "ink_sac", "honeycomb", "scute", "pufferfish", "feather", "nautilus_shell", "sniffer_egg", "turtle_egg", "egg", "shugar", "glowstone_dust" and "echo_shard"
 
-    set {SERVER} to "survival_main"
-
     applyCache()
 
 #get free space of item in sack

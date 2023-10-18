@@ -1,0 +1,31 @@
+on join:
+    if player's name partially matches "Launcher":
+        execute console command "kick %player% 1.4. Запрещена реклама в любой форме."
+    if player's name partially matches "mcstorm":
+        execute console command "kick %player% 2.8. Запрещены дюп предметов, механизмы и фермы, создающие лаги, массовая генерация новых чанков, использование багов, нарушение стабильности сервера."
+    if player's name partially matches "pido[r|ri|ras|rasi]":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "admin":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "moder":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "piska":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "loshok":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name start with "asd":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name start with "sdf":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "blyat":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "govn[oe]":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "fuck":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "[hx][uy]esos":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "1488":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."
+    if player's name partially matches "ebal":
+        execute console command "kick %player% 1.1. Ник не должен содержать случайный набор букв/цифр, оскорбления, мат, копировать ник другого пользователя."

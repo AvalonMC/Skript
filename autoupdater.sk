@@ -1,0 +1,43 @@
+function copyFile(file1: string, file2: string):
+    if file {_file1} doesn't exist:
+        message "&7[&3Skript&7-&cautoupdated&7]: &fFile %{_file1}% doesn't exist!" to console
+    if file {_file2} exists:
+        delete file {_file2}
+    create file {_file2}
+    set {_fileLines::*} to file contents of {_file1}
+
+    set {_i} to size of {_fileLines::*}
+    while {_i} > 0:
+        write "%{_fileLines::%{_i}%}%" at line 1 to file {_file2}
+        remove 1 from {_i}
+
+function downloadFileFromGit(url: string, path: string):
+    set {_skript::*} to url {_url}'s contents
+
+    set {_code::*} to split {_skript::1238} using """rawLines"":["""
+    set {_code::*} to split {_code::2} using """],""stylingDirectives"""
+    set {_code::*} to split {_code::1} using ""","""
+    
+    delete file {_path}
+    create file {_path}
+
+    set {_i} to size of {_code::*}
+    while {_i} > 0:
+        set {_str} to {_code::%{_i}%}
+        set {_space} to {_code::%{_i}%}
+        replace all "\""" in {_str} with """"
+        replace all "\""" in {_space} with """"
+        set {_text::*} to regex split {_space} using "(\s\s\s\s)\1{0,}"
+        replace all {_text::2} in {_space} with ""
+        if {_space} start with "on" or "function" or "command" or "event":
+            set {_space} to ""
+        set {_lineStr} to convert unicode {_str} to text
+        write "%{_space}%%{_lineStr}%" at line 1 to file {_path}
+        remove 1 from {_i}
+
+command /updateSkripts:
+    trigger:
+        if file "plugins/Skript/git.zip" exists:
+            delete file "plugins/Skript/git.zip"
+        download file from "https://github.com/AvalonMC/Skript/archive/refs/heads/main.zip" to file "plugins\\Skript\\git.zip"
+        unzip "plugins/Skript/git.zip" to directory "plugins/Skript/git"
