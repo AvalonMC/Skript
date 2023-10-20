@@ -10,7 +10,6 @@ function altar(who: player, startLocation: location, altarBlocks: items, altarIn
         while {_i} < {_matchedTotal}:
             set {_j} to {_i} + 1
             if {_block} is type of {_altarBlocks::%{_j}%}:
-                message "%{_block}%" to console
                 if {_matches::%{_j}%} < item amount of {_altarBlocks::%{_j}%}:
                     add 1 to {_matches::%{_j}%}
                     if {_matches::%{_j}%} = item amount of {_altarBlocks::%{_j}%}:
@@ -27,21 +26,181 @@ function altar(who: player, startLocation: location, altarBlocks: items, altarIn
     return false
 
 on right click on gold block:
-    set {_blocks::*} to 18 obsidian, 2 diamond block, 5 dirt, 1 gold block and 5 dead bush
-    set {_inventoryItems::*} to 10 redstone, 10 bones, 10 gunpowder and 1 mushroom stew
-    
-    set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
-    if {_altarRes} is true:
-        message "pisos" to event-player
+    if {cooldown::%uuid of event-player%} > 0:
+        cancel event
     else:
-        message "sosi" to event-player
+        set {cooldown::%uuid of event-player%} to 1
+        if event-player is holding bottle:
+            if getSscore("%event-player%", "vampire.vampire_mode") is "vampire":
+                remove bottle from event-player's inventory
+                damage event-player by 5 hearts
+                execute console command "/give %event-player% potion{display:{Name:'{""text"":""Кровь вампира"",""color"":""dark_red"",""italic"":false}',Lore:['{""text"":""Выпив её можно стать вампиром"",""color"":""gray"",""italic"":false}','{""text"":""Для вампиров безвредна и бессмысленна"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160003,CustomPotionColor:6029312} 1"
+            else if getSscore("%event-player%", "vampire.vampire_mode") is "init" or "cure":
+                remove bottle from event-player's inventory
+                damage event-player by 5 hearts
+                execute console command "/give %event-player% potion{display:{Name:'{""text"":""Кровь полувампира"",""color"":""dark_red"",""italic"":false}',Lore:['{""text"":""Выпив её есть шанс стать вампиром"",""color"":""gray"",""italic"":false}','{""text"":""Вампир может слабо насытится ею"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160002,CustomPotionColor:6489437} 1"
+            else if getSscore("%event-player%", "vampire.vampire_mode") is "cured":
+                remove bottle from event-player's inventory
+                damage event-player by 5 hearts
+                execute console command "/give %event-player% potion{display:{Name:'{""text"":""Кровь излечившегося"",""color"":""dark_red"",""italic"":false}',Lore:['{""text"":""Антитела могут отравить вампира"",""color"":""gray"",""italic"":false}','{""text"":""Может прервать процесс превращения в вампира"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160004,CustomPotionColor:16711680} 1"
+            else:
+                remove bottle from event-player's inventory
+                damage event-player by 5 hearts
+                execute console command "/give %event-player% potion{display:{Name:'{""text"":""Кровь %event-player%"",""color"":""dark_red"",""italic"":false}',Lore:['{""text"":""Вампир может насытится ею"",""color"":""gray"",""italic"":false}','{""text"":""Для человека безвредна"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160001,CustomPotionColor:10682368} 1"
+        else:
+            set {_blocks::*} to 18 obsidian, 2 diamond block, 5 dirt, 1 gold block and 5 dead bush
+            set {_inventoryItems::*} to 10 redstone, 10 bones, 10 gunpowder and 1 mushroom stew
+            set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
+            if {_altarRes} is true:
+                setSscore("%event-player%", "vampire.transformation", system seconds)
+                setSscore("%event-player%", "vampire.vampire_mode", "init")
+                message "&7[&cАлтарь тьмы&7]: Жертва принята!" to event-player
+            else:
+                message "&7[&cАлтарь тьмы&7]: Не хватает ресурсов! На постройку алтаря нужно 18 обсидиана, 2 алмазных блока, 5 грязи, золотой блок и 5 мёртвых кустов. Чтобы активировать аларь необходимо пожертвовать 10 редстоуна, 10 костей, 10 пороха и грибной суп." to event-player
+        
 
 on right click on lapis block:
-    set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
-    set {_inventoryItems::*} to 10 redstone, 10 bones, 10 gunpowder and 1 mushroom stew
-
-    set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
-    if {_altarRes} is true:
-        message "pisos" to event-player
+    if {cooldown::%uuid of event-player%} > 0:
+        cancel event
     else:
-        message "sosi" to event-player
+        set {cooldown::%uuid of event-player%} to 1
+        if event-player is holding water bottle:
+            if getSscore("%event-player%", "vampire.vampire_mode") isn't "vampire":
+                remove water bottle from event-player's inventory
+                loop 10 times:
+                    show end rod at the location at x of vector of event-block + 0, y of vector of event-block + 1, z of vector of event-block + 0 ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the event-player
+                execute console command "/summon item %x of vector of event-block - 0.5% %y of vector of event-block + 1% %z of vector of event-block - 0.5% {Item:{id:""minecraft:splash_potion"",Count:1b,tag:{display:{Name:'{""text"":""Святая вода"",""color"":""blue"",""bold"":false}',Lore:['{""text"":""Накладывает на вампиров эффект наносящий урон"",""color"":""gray""}']},HideFlags:255,CustomModelData:160001,custom_potion_effects:[{id:""minecraft:unluck"",amplifier:3b,duration:600}],CustomPotionColor:16711664}}}"
+        else:
+            set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
+            set {_inventoryItems::*} to diamond, 20 wheat, 20 sugar, water bucket
+            set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
+            if {_altarRes} is true:
+                setSscore("%event-player%", "vampire.transformation", system seconds)
+                setSscore("%event-player%", "vampire.vampire_mode", "cure")
+                message "&7[&bАлтарь света&7]: Жертва принята!" to event-player
+            else:
+                message "&7[&bАлтарь света&7]: Не хватает ресурсов! На постройку алтаря нужно 30 светокамня, 2 алмазных блока, лазуритовый блок, 5 мака и 5 одуванчиков. Чтобы активировать аларь необходимо пожертвовать алмаз, 20 пшеницы, 20 сахара и ведро воды." to event-player
+
+every 10 tick:
+    loop {cooldown::*}:
+        set {cooldown::%loop-index%} to 0
+
+every 1 minute:
+    set {_currentTime} to system seconds
+    loop all players:
+        set {_p} to loop-player
+        set {_pTime} to getSscore("%loop-player%", "vampire.transformation")
+        set {_pMode} to getSscore("%loop-player%", "vampire.vampire_mode")
+        if {_pMode} is "init":
+            if {_pTime} parsed as number + 7200 > {_currentTime}:
+                message "%{_pTime}% -> %{_currentTime}%" to loop-player 
+                apply nausea potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            else:
+                setSscore("%loop-player%", "vampire.vampire_mode", "vampire")
+        else if {_pMode} is "vampire":
+            apply night vision potion of tier 1 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            apply hunger potion of tier 1 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            apply jump potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            apply speed potion of tier 2 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            apply water breathing of tier 2 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+
+every 2 seconds:
+    loop all players:
+        if getSscore("%loop-player%", "vampire.vampire_mode") is "vampire":
+            if the amplifier of bad luck of loop-player = 4:
+                remove potion effect of bad luck from potion effects of loop-player
+                damage loop-player by 5 hearts
+            set {_temperature} to getSscore("%loop-player%", "vampire.temperature") parsed as number
+            if time in loop-player's world is day:
+                if sunlight level at the loop-player is greater than 14:
+                    if weather in loop-player's world is sunny:
+                        if {_temperature} >= 100:
+                            loop 10 times:
+                                show mobspawner flames at the loop-player ~ vector(random number between -0.25 and 0.25, random number between 0 and 1.8, random number between -0.25 and 0.25) to the loop-player
+                            send actionbar "&cСлишком высокая температура! Спрячься от солнца!" to loop-player
+                            remove potion effect of fire resistance from potion effects of loop-player
+                            ignite the loop-player for 30 seconds
+                        else:
+                            loop {_temperature} times:
+                                show smoke particle at the loop-player ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the loop-player
+                            setSscore("%loop-player%", "vampire.temperature", {_temperature} + sunlight level at loop-player's location)
+                            send actionbar "&6Температура: %{_temperature}%°" to loop-player
+                            remove potion effect of fire resistance from potion effects of loop-player
+                    else:
+                        if {_temperature} >= 10:
+                            setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
+                            send actionbar "&3Температура: %{_temperature}%°" to loop-player
+                else:
+                    if {_temperature} >= 10:
+                        setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
+                        send actionbar "&3Температура: %{_temperature}%°" to loop-player
+            else:
+                if {_temperature} >= 10:
+                    setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
+                    send actionbar "&9Температура: %{_temperature}%°" to loop-player
+
+on target:
+    set {_currentTime} to system seconds
+    set {_damageUndead} to getSscore("%target%", "vampire.damageUndead") parsed as number
+    if entity's target is a player:
+        if getSscore("%target%", "vampire.vampire_mode") is "vampire":
+            if {_damageUndead} is 0:
+                if event-entity is zombie, husk, skeleton, wither skeleton, stray, phantom, zoglin, zombie villager, zombified piglin, vex, ghast or drowned: 
+                    cancel event
+            else if {_damageUndead} + 90 > {_currentTime}:
+                if event-entity is zombie, husk, skeleton, wither skeleton, stray, phantom, zoglin, zombie villager, zombified piglin, vex, ghast or drowned: 
+                    cancel event
+
+on damage by player:
+    set {_isVampire} to getSscore("%attacker%", "vampire.vampire_mode")
+    if {_isVampire} is "vampire":
+        if victim is zombie, husk, skeleton, wither skeleton, stray, phantom, zoglin, zombie villager, zombified piglin, vex, ghast or drowned:
+            set target of victim to attacker
+            apply speed potion of tier 3 without any particles to the victim for 75 seconds
+            loop 5 times:
+                show angry villager at the victim ~ vector(random number between -0.5 and 0.5, random number between 1.5 and 1.8, random number between -0.5 and 0.5) to the attacker
+            setSscore("%attacker%", "vampire.damageUndead", system seconds)
+        else if victim is a allay, axolotl, bat, bee, camel, cat, chicken, cod, cow, dolphin, donkey, evoker, fox, frog, glow squid, goat, hoglin, horse, illusioner, llama, mule, mooshroom, ocelot, panda, parrot, pig, piglin, piglin brute, pillager, player, polar bear, pufferfish, rabbit, ravager, salmon, sheep, sniffer, squid, strider, tadpole, trader llama, tropical fish, turtle, villager, vindicator, wandering trader, witch or wolf:
+            chance of 30%:
+                add 1 to attacker's food level
+    if victim is a player:
+        if {_isVampire} is "vampire":
+            if attacker is holding a stick, wooden sword or wooden axe:
+                increase the damage by 3
+
+on damage:
+    if damage was caused by fall:
+        if getSscore("%victim%", "vampire.vampire_mode") is "vampire":
+            cancel event
+
+on consume:
+    if getSscore("%event-player%", "vampire.vampire_mode") is "vampire":
+        if event-item is potion with custom model data 160001:
+            add 5 to event-player's food level
+        else if event-item is potion with custom model data 160002:
+            add 3 to event-player's food level
+        else if event-item is potion with custom model data 160004:
+            damage event-player by 7 hearts
+        else if event-item is apple, golden apple, enchanted golden apple, melon slice, sweet berries, glow berries, chorus fruit, carrot, golden carrot, potato, baked potato, dried kelp, beef, cooked beef, porkchop, cooked porkchop, mutton, cooked mutton, chicken, cooked chicken, rabbit, cooked rabbit, cod, cooked cod, salmon, cooked salmon, bread, cookie, pumpkin pie, rotten flesh, mushroom stew, beetroot soup, rabbit stew, honey bottle:
+            cancel event
+
+    else if getSscore("%event-player%", "vampire.vampire_mode") is "init" or "cure":
+        if event-item is potion with custom model data 160001:
+            send "&7[Бог&7]: Ты чего творишь?! Так нельзя!"
+        else if event-item is potion with custom model data 160002:
+            chance of 0.5:
+                setSscore("%event-player%", "vampire.vampire_mode", "vampire")
+        else if event-item is potion with custom model data 160003:
+            setSscore("%event-player%", "vampire.vampire_mode", "vampire")
+        else if event-item is potion with custom model data 160004:
+            setSscore("%event-player%", "vampire.vampire_mode", "cured")
+    else:
+        if event-item is potion with custom model data 160002:
+            chance of 0.5:
+                setSscore("%event-player%", "vampire.vampire_mode", "init")
+        else if event-item is potion with custom model data 160003:
+            setSscore("%event-player%", "vampire.vampire_mode", "init")
+
+on right click on cake:
+    if getSscore("%event-player%", "vampire.vampire_mode") is "vampire":
+        cancel event

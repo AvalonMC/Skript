@@ -11,6 +11,9 @@ function copyFile(file1: string, file2: string):
         write "%{_fileLines::%{_i}%}%" at line 1 to file {_file2}
         remove 1 from {_i}
 
+function updateFile(file: string):
+    copyFile("plugins/Skript/git/%{_file}%", "plugins/Skript/scripts/%{_file}%")
+
 function downloadFileFromGit(url: string, path: string):
     set {_skript::*} to url {_url}'s contents
 
@@ -41,3 +44,21 @@ command /updateSkripts:
             delete file "plugins/Skript/git.zip"
         download file from "https://github.com/AvalonMC/Skript/archive/refs/heads/main.zip" to file "plugins\\Skript\\git.zip"
         unzip "plugins/Skript/git.zip" to directory "plugins/Skript/git"
+        if {SERVER} is "survival_main":
+            updateFile("sack.sk")
+            updateFile("money_for_votes.sk")
+            updateFile("1984.sk")
+            updateFile("placeholders.sk")
+            updateFile("region.sk")
+            updateFile("sscore.sk")
+            updateFile("vampire.sk")
+            updateFile("forge.sk")
+        else if {SERVER} is "survival_islands":
+            updateFile("skyblock.sk")
+            updateFile("sack.sk")
+            updateFile("1984.sk")
+            updateFile("placeholders.sk")
+            updateFile("sscore.sk")
+        else if {SERVER} is "lobby":
+            updateFile("placeholders.sk")
+            updateFile("lobby_autokick.sk")

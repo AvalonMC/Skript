@@ -18,6 +18,12 @@ function getSscore(playerName: string, identifier: string) :: string:
         set {_return} to yml value {_identifier} from file "plugins/Skript/scripts/players/%{_playerName}%.yml"
         return "%{_return}%"
 
+function setSscore(playerName: string, identifier: string, value: object):
+    if file "plugins/Skript/scripts/players/%{_playerName}%.yml" doesn't exist:
+        create file "plugins/Skript/scripts/players/%{_playerName}%.yml"
+
+    set yml value {_identifier} from file "plugins/Skript/scripts/players/%{_playerName}%.yml" to {_value}
+
 command /sscore <text> <text> <text> <text> [<text>]:
     permission: group.admin
     description: YAML-based scores
