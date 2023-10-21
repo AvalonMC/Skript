@@ -9,7 +9,13 @@ on placeholderapi placeholder request for the prefix "font":
             set the result to "Биба!"
 
 on placeholderapi placeholder request for the prefix "sscore":
-    set the result to getSscore("%player%", identifier)
+    if identifier partially matches "player":
+        set {_identifier} to identifier
+        replace all "player_" in {_identifier} with ""
+        set {_sscore::*} to split {_identifier} using "_"
+        set the result to getSscore({_sscore::1}, {_sscore::2})
+    else:
+        set the result to getSscore("%player%", identifier)
 
 on placeholderapi placeholder request for the prefix "info":
     if identifier matches "chance":

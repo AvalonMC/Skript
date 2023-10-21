@@ -67,8 +67,9 @@ on right click on lapis block:
         if event-player is holding water bottle:
             if getSscore("%event-player%", "vampire.vampire_mode") isn't "vampire":
                 remove water bottle from event-player's inventory
-                loop 10 times:
-                    show end rod at the location at x of vector of event-block + 0, y of vector of event-block + 1, z of vector of event-block + 0 ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the event-player
+                #cause server error (long respond time)
+                #loop 10 times:
+                    #show end rod at the location at x of vector of event-block + 0, y of vector of event-block + 1, z of vector of event-block + 0 ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the event-player
                 execute console command "/summon item %x of vector of event-block - 0.5% %y of vector of event-block + 1% %z of vector of event-block - 0.5% {Item:{id:""minecraft:splash_potion"",Count:1b,tag:{display:{Name:'{""text"":""Святая вода"",""color"":""blue"",""bold"":false}',Lore:['{""text"":""Накладывает на вампиров эффект наносящий урон"",""color"":""gray""}']},HideFlags:255,CustomModelData:160001,custom_potion_effects:[{id:""minecraft:unluck"",amplifier:3b,duration:600}],CustomPotionColor:16711664}}}"
         else:
             set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
@@ -93,8 +94,16 @@ every 1 minute:
         set {_pMode} to getSscore("%loop-player%", "vampire.vampire_mode")
         if {_pMode} is "init":
             if {_pTime} parsed as number + 7200 > {_currentTime}:
-                message "%{_pTime}% -> %{_currentTime}%" to loop-player 
-                apply nausea potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+                chance of 30%:
+                    apply nausea potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+                chance of 30%:
+                    apply poison potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+                chance of 30%:
+                    apply wither potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+                chance of 50%:
+                    apply blindness potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+                chance of 50%:
+                    apply darkness potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             else:
                 setSscore("%loop-player%", "vampire.vampire_mode", "vampire")
         else if {_pMode} is "vampire":
@@ -124,20 +133,20 @@ every 2 seconds:
                             loop {_temperature} times:
                                 show smoke particle at the loop-player ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the loop-player
                             setSscore("%loop-player%", "vampire.temperature", {_temperature} + sunlight level at loop-player's location)
-                            send actionbar "&6Температура: %{_temperature}%°" to loop-player
+                            send actionbar "&6Температура: %{_temperature}%℃" to loop-player
                             remove potion effect of fire resistance from potion effects of loop-player
                     else:
                         if {_temperature} >= 10:
                             setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
-                            send actionbar "&3Температура: %{_temperature}%°" to loop-player
+                            send actionbar "&3Температура: %{_temperature}%℃" to loop-player
                 else:
                     if {_temperature} >= 10:
                         setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
-                        send actionbar "&3Температура: %{_temperature}%°" to loop-player
+                        send actionbar "&3Температура: %{_temperature}%℃" to loop-player
             else:
                 if {_temperature} >= 10:
                     setSscore("%loop-player%", "vampire.temperature", {_temperature} - 5)
-                    send actionbar "&9Температура: %{_temperature}%°" to loop-player
+                    send actionbar "&9Температура: %{_temperature}%℃" to loop-player
 
 on target:
     set {_currentTime} to system seconds
@@ -160,13 +169,28 @@ on damage by player:
             loop 5 times:
                 show angry villager at the victim ~ vector(random number between -0.5 and 0.5, random number between 1.5 and 1.8, random number between -0.5 and 0.5) to the attacker
             setSscore("%attacker%", "vampire.damageUndead", system seconds)
-        else if victim is a allay, axolotl, bat, bee, camel, cat, chicken, cod, cow, dolphin, donkey, evoker, fox, frog, glow squid, goat, hoglin, horse, illusioner, llama, mule, mooshroom, ocelot, panda, parrot, pig, piglin, piglin brute, pillager, player, polar bear, pufferfish, rabbit, ravager, salmon, sheep, sniffer, squid, strider, tadpole, trader llama, tropical fish, turtle, villager, vindicator, wandering trader, witch or wolf:
+        else if victim is a allay, axolotl, bat, bee, camel, cat, chicken, cod, cow, dolphin, donkey, evoker, fox, frog, glow squid, goat, hoglin, horse, illusioner, llama, mule, mooshroom, ocelot, panda, parrot, pig, piglin, piglin brute, pillager, polar bear, pufferfish, rabbit, ravager, salmon, sheep, sniffer, squid, strider, tadpole, trader llama, tropical fish, turtle, villager, vindicator, wandering trader, witch or wolf:
             chance of 30%:
                 add 1 to attacker's food level
+        else if victim is a player:
+            chance of 30%:
+                add 1.5 to attacker's food level
+            chance of 10%:
+                if getSscore("%victim%", "vampire.vampire_mode") is "init" or "cured":
+                    setSscore("%victim%", "vampire.transformation", system seconds)
+                    setSscore("%victim%", "vampire.vampire_mode", "init")
     if victim is a player:
         if {_isVampire} is "vampire":
             if attacker is holding a stick, wooden sword or wooden axe:
                 increase the damage by 3
+
+on damage of player by stray:
+    if the attacker has the scoreboard tag "vampire":
+        if getSscore("%victim%", "vampire.vampire_mode") is "init" or "cured":
+            chance of 50%:
+                setSscore("%victim%", "vampire.transformation", system seconds)
+                setSscore("%victim%", "vampire.vampire_mode", "init")
+
 
 on damage:
     if damage was caused by fall:
