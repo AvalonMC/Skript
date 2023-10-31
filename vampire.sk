@@ -64,13 +64,12 @@ on right click on lapis block:
         cancel event
     else:
         set {cooldown::%uuid of event-player%} to 1
-        if event-player is holding water bottle:
+        if event-player is holding diamond:
             if getSscore("%event-player%", "vampire.vampire_mode") isn't "vampire":
-                remove water bottle from event-player's inventory
-                #cause server error (long respond time)
-                #loop 10 times:
-                    #show end rod at the location at x of vector of event-block + 0, y of vector of event-block + 1, z of vector of event-block + 0 ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the event-player
-                execute console command "/summon item %x of vector of event-block - 0.5% %y of vector of event-block + 1% %z of vector of event-block - 0.5% {Item:{id:""minecraft:splash_potion"",Count:1b,tag:{display:{Name:'{""text"":""Святая вода"",""color"":""blue"",""bold"":false}',Lore:['{""text"":""Накладывает на вампиров эффект наносящий урон"",""color"":""gray""}']},HideFlags:255,CustomModelData:160001,custom_potion_effects:[{id:""minecraft:unluck"",amplifier:3b,duration:600}],CustomPotionColor:16711664}}}"
+                remove diamond from event-player's inventory
+                loop 10 times:
+                    show end rod at location of event-block ~ vector(random number between -0.5 and 0.5, random number between 0 and 1.8, random number between -0.5 and 0.5) to the event-player
+                execute console command "/summon item %x of vector of event-block - 0.5% %y of vector of event-block + 1% %z of vector of event-block - 0.5% {Item:{id:""minecraft:splash_potion"",Count:1b,tag:{display:{Name:'{""text"":""Святая вода"",""color"":""blue"",""italic"":false}',Lore:['{""text"":""Накладывает на вампиров"",""color"":""gray"",""italic"":false}','{""text"":""эффект наносящий урон"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160001,custom_potion_effects:[{id:""minecraft:unluck"",amplifier:3b,duration:600}],CustomPotionColor:16711664}}}"
         else:
             set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
             set {_inventoryItems::*} to diamond, 20 wheat, 20 sugar, water bucket

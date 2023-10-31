@@ -1,5 +1,6 @@
 players/
 -examples/
+shop/
 test.sk
 tests/
 server_data.sk

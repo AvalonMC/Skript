@@ -1,0 +1,25 @@
+on right click on villager holding a carrot on a stick:
+    cancel event
+    show end rod at the event-entity ~ vector(0, 2.2, 0) to the event-player
+    set metadata value "pathedVilllager" of player to event-entity
+    remove 1 from durability of event-player's held item
+    if durability of event-player's held item <= 0:
+        remove event-player's held item from event-player's inventory
+
+on right click holding a carrot on a stick:
+    if metadata value "pathedVilllager" of player is set:
+        if custom model data of event-player's held item is 160001:
+            if event-block is set:
+                show end rod at location of event-block ~ vector(0,1,0) to the event-player
+                make metadata value "pathedVilllager" of player pathfind to location of event-block
+                remove 1 from durability of event-player's held item
+                if durability of event-player's held item <= 0:
+                    remove event-player's held item from event-player's inventory
+        else:
+            message event-block to console
+
+command /give_pathfinding_rod <player>:
+    permission: skript.pathfinding
+    trigger:
+        set {_item} to carrot on a stick
+        execute console command "/give %arg-1% carrot_on_a_stick{display:{Name:'{""text"":""Жезл пути"",""color"":""yellow"",""italic"":false}',Lore:['{""text"":""Помогает жителю найти"",""color"":""gray"",""italic"":false}','{""text"":""путь к нужному блоку"",""color"":""gray"",""italic"":false}','{""text"":""""}','{""text"":""ПКМ по жителю"",""color"":""gray"",""italic"":false}','{""text"":""ПКМ по блоку"",""color"":""gray"",""italic"":false}']},RepairCost:100,CustomModelData:160001} 1"

@@ -17,6 +17,30 @@ on placeholderapi placeholder request for the prefix "sscore":
     else:
         set the result to getSscore("%player%", identifier)
 
+on placeholderapi placeholder request for the prefix "shop":
+    if identifier start with "buy_":
+        set {_identifier} to identifier
+        replace all "buy_" in {_identifier} with ""
+        set {_item::*} to split {_identifier} using "_"
+        set {_result} to getBuyPrice({_item::1}, {_item::2} parsed as number)
+        set the result to "%{_result}%"
+    else if identifier start with "sell_":
+        set {_identifier} to identifier
+        replace all "sell_" in {_identifier} with ""
+        set {_item::*} to split {_identifier} using "_"
+        set {_result} to getSellPrice({_item::1}, {_item::2} parsed as number)
+        set the result to "%{_result}%"
+    else if identifier start with "diff_":
+        set {_identifier} to identifier
+        replace all "diff_" in {_identifier} with ""
+        set the result to getDiff({_identifier})
+    else if identifier start with "stock_":
+        set {_identifier} to identifier
+        replace all "stock_" in {_identifier} with ""
+        set {_item::*} to split {_identifier} using "_"
+        set {_result} to getShop({_item::1}, "stock") parsed as number / {_item::2} parsed as number
+        set the result to "%{_result}%"
+
 on placeholderapi placeholder request for the prefix "info":
     if identifier matches "chance":
         set the result to getSscore("##server", "monitoring.chance")
@@ -25,11 +49,9 @@ on placeholderapi placeholder request for the prefix "info":
 
     else if identifier matches "hours":
         set {_hours} to placeholder "objective_score_hours" from player parsed as number
-        set {_thousands} to floor({_hours}  / 1000) + 1
         set {_hundreds} to floor(mod({_hours}, 1000) / 100) + 1
         set {_colors::*} to "##BAC0C2", "##FFFFFF", "##FFFA84", "##48FF38", "##2FE0D4", "##3289E5", "##143BFF", "##671CD8", "##E22FE2" and "##FF1814"
-        set {_symbols::*} to "☆", "★" and "✪"
-        set the result to "%{_hours}% %{_colors::%{_hundreds}%}%%{_symbols::%{_thousands}%}%"
+        set the result to "%{_hours}% %{_colors::%{_hundreds}%}%⌛"
 
     else if identifier matches "streak_load":
         set {_hour} to placeholder "objective_score_hour" from player parsed as number
