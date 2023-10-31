@@ -27,3 +27,8 @@ on chat:
         set {_message} to subtext of {_message} from character 1 to 6
         set {_result} to join {_splited::*} with delimiter {_message}
         set message to {_result}
+    if message start with "!":
+        set {_message} to message
+        set {_message} to subtext of {_message} from characters 2 to (the length of {_message})
+        message "&7[&eAvalon&7]: У нас нет разделения на глобальный и локальный чат. Можно писать без ""!""" to event-player
+        set message to {_message}
