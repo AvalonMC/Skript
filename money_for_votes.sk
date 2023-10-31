@@ -1,5 +1,11 @@
 on load:
     set {restartTime} to now formatted as "HH"
+    set {restartDay} to now formatted as "dd"
+    if {restartDay} is "01":
+        execute console command "/sscore set number ##server monitoring.votes 0"
+        execute console command "/sscore set number ##server monitoring.today 0"
+        execute console command "/sscore set number ##server monitoring.diff 0"
+        execute console command "/sscore set number ##server monitoring.chance 0"
 
     if {restartTime} isn't "04":
         set {votes} to getSscore("##server", "monitoring.votes") parsed as number
@@ -45,12 +51,13 @@ command /monitoring_votes:
             set {chance} to 0
         
         set {_chanceDiff} to {chance} - getSscore("##server", "monitoring.chance") parsed as number
-        
-        execute console command "/sscore set number ##server monitoring.votes %{votes}%"
-        execute console command "/sscore set number ##server monitoring.today %{today}%"
-        execute console command "/sscore set number ##server monitoring.diff %{votesDiff}%"
-        execute console command "/sscore set number ##server monitoring.place %{place}%"
-        execute console command "/sscore set number ##server monitoring.chance %{chance}%"
+
+        if {_chanceDiff} >= 0.01:
+            execute console command "/sscore set number ##server monitoring.votes %{votes}%"
+            execute console command "/sscore set number ##server monitoring.today %{today}%"
+            execute console command "/sscore set number ##server monitoring.diff %{votesDiff}%"
+            execute console command "/sscore set number ##server monitoring.place %{place}%"
+            execute console command "/sscore set number ##server monitoring.chance %{chance}%"
         
         if {_chanceDiff} > 0.01:
             send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7" to players
