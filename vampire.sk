@@ -72,7 +72,7 @@ on right click on lapis block:
                 execute console command "/summon item %x of vector of event-block - 0.5% %y of vector of event-block + 1% %z of vector of event-block - 0.5% {Item:{id:""minecraft:splash_potion"",Count:1b,tag:{display:{Name:'{""text"":""Святая вода"",""color"":""blue"",""italic"":false}',Lore:['{""text"":""Накладывает на вампиров"",""color"":""gray"",""italic"":false}','{""text"":""эффект наносящий урон"",""color"":""gray"",""italic"":false}']},HideFlags:255,CustomModelData:160001,custom_potion_effects:[{id:""minecraft:unluck"",amplifier:3b,duration:600}],CustomPotionColor:16711664}}}"
         else:
             set {_blocks::*} to 30 glowstone, 2 diamond block, 1 lapis block, 5 dandelion and 5 poppy
-            set {_inventoryItems::*} to diamond, 20 wheat, 20 sugar, water bucket
+            set {_inventoryItems::*} to diamond, 20 wheat, 20 sugar and water bucket
             set {_altarRes} to altar(event-player, location of event-block, {_blocks::*}, {_inventoryItems::*})
             if {_altarRes} is true:
                 setSscore("%event-player%", "vampire.transformation", system seconds)
@@ -149,13 +149,13 @@ every 2 seconds:
 
 on target:
     set {_currentTime} to system seconds
-    set {_damageUndead} to getSscore("%target%", "vampire.damageUndead") parsed as number
+    set {_damage_undead} to getSscore("%target%", "vampire.damage_undead") parsed as number
     if entity's target is a player:
         if getSscore("%target%", "vampire.vampire_mode") is "vampire":
-            if {_damageUndead} is 0:
+            if {_damage_undead} is 0:
                 if event-entity is zombie, husk, skeleton, wither skeleton, stray, phantom, zoglin, zombie villager, zombified piglin, vex, ghast or drowned: 
                     cancel event
-            else if {_damageUndead} + 90 > {_currentTime}:
+            else if {_damage_undead} + 90 > {_currentTime}:
                 if event-entity is zombie, husk, skeleton, wither skeleton, stray, phantom, zoglin, zombie villager, zombified piglin, vex, ghast or drowned: 
                     cancel event
 
@@ -167,7 +167,7 @@ on damage by player:
             apply speed potion of tier 3 without any particles to the victim for 75 seconds
             loop 5 times:
                 show angry villager at the victim ~ vector(random number between -0.5 and 0.5, random number between 1.5 and 1.8, random number between -0.5 and 0.5) to the attacker
-            setSscore("%attacker%", "vampire.damageUndead", system seconds)
+            setSscore("%attacker%", "vampire.damage_undead", system seconds)
         else if victim is a allay, axolotl, bat, bee, camel, cat, chicken, cod, cow, dolphin, donkey, evoker, fox, frog, glow squid, goat, hoglin, horse, illusioner, llama, mule, mooshroom, ocelot, panda, parrot, pig, piglin, piglin brute, pillager, polar bear, pufferfish, rabbit, ravager, salmon, sheep, sniffer, squid, strider, tadpole, trader llama, tropical fish, turtle, villager, vindicator, wandering trader, witch or wolf:
             chance of 30%:
                 add 1 to attacker's food level
@@ -204,13 +204,11 @@ on consume:
             add 3 to event-player's food level
         else if event-item is potion with custom model data 160004:
             damage event-player by 7 hearts
-        else if event-item is apple, golden apple, enchanted golden apple, melon slice, sweet berries, glow berries, chorus fruit, carrot, golden carrot, potato, baked potato, dried kelp, beef, cooked beef, porkchop, cooked porkchop, mutton, cooked mutton, chicken, cooked chicken, rabbit, cooked rabbit, cod, cooked cod, salmon, cooked salmon, bread, cookie, pumpkin pie, rotten flesh, mushroom stew, beetroot soup, rabbit stew, honey bottle:
+        else if event-item is apple, golden apple, enchanted golden apple, melon slice, sweet berries, glow berries, chorus fruit, carrot, golden carrot, potato, baked potato, dried kelp, beef, cooked beef, porkchop, cooked porkchop, mutton, cooked mutton, chicken, cooked chicken, rabbit, cooked rabbit, cod, cooked cod, salmon, cooked salmon, bread, cookie, pumpkin pie, rotten flesh, mushroom stew, beetroot soup, rabbit stew or honey bottle:
             cancel event
 
     else if getSscore("%event-player%", "vampire.vampire_mode") is "init" or "cure":
-        if event-item is potion with custom model data 160001:
-            send "&7[Бог&7]: Ты чего творишь?! Так нельзя!"
-        else if event-item is potion with custom model data 160002:
+        if event-item is potion with custom model data 160002:
             chance of 0.5:
                 setSscore("%event-player%", "vampire.vampire_mode", "vampire")
         else if event-item is potion with custom model data 160003:
