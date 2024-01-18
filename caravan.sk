@@ -1,0 +1,57 @@
+#https://discord.com/api/webhooks/1195794267604537474/Evf3Y-1Lx4vSYlkfIrN9r75ysZ2KftdObkcrGFvZ2OZkxd1MKBZlvIeRXkK-2-PXDM9B
+on load:
+    set {pisos} to "{""content"":""message""}"
+    set {sosi} to "{""username"": ""Webhook"", ""avatar_url"": ""https://i.imgur.com/4M34hi2.png"", ""content"": ""Text message. Up to 2000 characters."", ""embeds"": [{""author"": {""name"": ""Birdie♫"", ""url"": ""https://www.reddit.com/r/cats/"", ""icon_url"": ""https://i.imgur.com/R66g1Pe.jpg""}, ""title"": ""Title"", ""url"": ""https://google.com/"", ""description"": ""Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`"", ""color"": 15258703, ""fields"": [{""name"": ""Text"", ""value"": ""More text"", ""inline"": true}, {""name"": ""Even more text"", ""value"": ""Yup"", ""inline"": true}, {""name"": ""Use `\""inline\"": true` parameter, if you want to display fields in the same line."", ""value"": ""okay...""}, {""name"": ""Thanks!"", ""value"": ""You're welcome :wink:""}], ""thumbnail"": {""url"": ""https://upload.wikimedia.org/wikipedia/commons/3/38/4-Nature-Wallpapers-2014-1_ukaavUI.jpg""}, ""image"": {""url"": ""https://upload.wikimedia.org/wikipedia/commons/5/5a/A_picture_from_China_every_day_108.jpg""}, ""footer"": {""text"": ""Woah! So cool! :smirk:"", ""icon_url"": ""https://i.imgur.com/fKL31aD.jpg""}}]}"
+
+    #send a "post" request to "https://discord.com/api/webhooks/1195794267604537474/Evf3Y-1Lx4vSYlkfIrN9r75ysZ2KftdObkcrGFvZ2OZkxd1MKBZlvIeRXkK-2-PXDM9B" with the body {sosi} and the headers "Content-Type: application/json"
+    if file "plugins\BetterGUI\menu\shop_test.yml" exists:
+        delete file "plugins\BetterGUI\menu\caravan.yml"
+    create file "plugins\BetterGUI\menu\caravan.yml"
+
+    set {_menuStart::*} to "menu-settings:", "  name: '&0Караван (день -1)'", "  rows: 5", "  command: caravan", "  auto-refresh: 20", "fill:", "  slot: 0, 4, 8-9, 13, 17-18, 22, 26-39, 41-44", "  type: template","  template: blank"  , "close:", "  position-x: 5", "  position-y: 5", "  type: template", "  template: close"
+
+    set {_materials::*} to files in dir "plugins/Skript/scripts/shop"
+
+    set {_i} to 9
+    while {_i} > 0:
+        set {_materialName} to random element out of {_materials::*}
+        set {_materialName::*} to {_materialName} split at "\"
+        set {_size} to size of {_materialName::*}
+        set {_materialName} to {_materialName::%{_size}%}
+        replace ".yml" in {_materialName} with ""
+        set {_x} to ceil({_i} / 3)
+        set {_y} to mod({_i}, 3)
+        message "%{_x}% %{_y}%"
+        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 1, {_y} + 1)
+        remove 1 from {_i}
+
+    set {_i} to 9
+    while {_i} > 0:
+        set {_materialName} to random element out of {_materials::*}
+        set {_materialName::*} to {_materialName} split at "\"
+        set {_size} to size of {_materialName::*}
+        set {_materialName} to {_materialName::%{_size}%}
+        replace ".yml" in {_materialName} with ""
+        set {_x} to ceil({_i} / 3)
+        set {_y} to mod({_i}, 3)
+        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 5, {_y} + 1)
+        remove 1 from {_i}
+
+    set {_i} to size of {_menuStart::*}
+    while {_i} > 0:
+        write "%{_menuStart::%{_i}%}%" at line 1 to file "plugins\BetterGUI\menu\caravan.yml"
+        remove 1 from {_i}
+    
+    execute console command "reloadmenu"
+
+function writeCaravanItemToFile(item: string, file: string, posX: number, posY: number):
+    write "    - 'sound: UI_BUTTON_CLICK'" at line 1 to file {_file}
+    write "  command:" at line 1 to file {_file}
+    write "    - ''" at line 1 to file {_file}
+    write "  lore:" at line 1 to file {_file}
+    write "  id: %{_item}%" at line 1 to file {_file}
+    write "  position-x: %{_posX}%" at line 1 to file {_file}
+    write "  position-y: %{_posY}%" at line 1 to file {_file}
+    write "%{_item}%%{_posX}%%{_posY}%:" at line 1 to file {_file}
+    remove 1 from {_i}
+    wait 1 tick

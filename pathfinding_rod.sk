@@ -15,8 +15,6 @@ on right click holding a carrot on a stick:
                 remove 1 from durability of event-player's held item
                 if durability of event-player's held item <= 0:
                     remove event-player's held item from event-player's inventory
-        else:
-            message event-block to console
 
 command /give_pathfinding_rod <player>:
     permission: skript.pathfinding

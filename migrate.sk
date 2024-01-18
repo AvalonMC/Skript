@@ -1,0 +1,144 @@
+command /migrate <string> <string>:
+    trigger:
+        set {_from} to arg-1 parsed as offline player
+        set {_to} to arg-2 parsed as offline player
+        set {_played} to placeholder "objective_score_played" from {_from} parsed as number
+        set {_homes} to placeholder "cmi_user_maxperm_cmi.command.sethome_1" from {_from} parsed as number
+        set {_regions} to placeholder "cmi_user_maxperm_wgrc.regionclaim_1" from {_from} parsed as number
+        set {_shekels} to placeholder "objective_score_{donate_money}" from {_from} parsed as number
+        set {_shekels_mined} to placeholder "objective_score_{donate_money_mined}" from {_from} parsed as number
+        set {_keysDay} to placeholder "objective_score_keys" from {_from} parsed as number
+        set {_keysEpic} to placeholder "objective_score_keysEpic" from {_from} parsed as number
+        set {_keysEpicStored} to placeholder "objective_score_{keysEpic_all}" from {_from} parsed as number
+        set {_keysEpicAll} to placeholder "objective_score_{keysEpic_stored}" from {_from} parsed as number
+        set {_keysTimeDay} to placeholder "objective_score_keysDay" from {_from} parsed as number
+        set {_streak} to placeholder "objective_score_keysStreak" from {_from} parsed as number
+        set {_money} to placeholder "cmi_user_balance" from {_from} parsed as number
+        set {_group} to placeholder "luckperms_primary_group_name" from {_from}
+        set {_lp} to placeholder "objective_score_lp" from {_from} parsed as number
+        
+        set {_playerUUID} to uuid of {_from}
+        if file {WORLD} doesn't exist:
+            message "Regions file of world is missing!" to console
+        if file {NETHER} doesn't exist:
+            message "Regions file of world_nether is missing!" to console
+        if file {END} doesn't exist:
+            message "Regions file of world_the_end is missing!" to console
+        set {_regions_world::*} to yml node keys "regions" from file {WORLD}
+        set {_regions_nether::*} to yml node keys "regions" from file {NETHER}
+        set {_regions_end::*} to yml node keys "regions" from file {END}
+        loop {_regions_world::*}:
+            if loop-value partially match "owners.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {WORLD}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_owner_player_world::*}
+            else if loop-value partially match "members.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {WORLD}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_member_player_world::*}
+        loop {_regions_nether::*}:
+            if loop-value partially match "owners.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {NETHER}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_owner_player_nether::*}
+            else if loop-value partially match "members.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {NETHER}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_member_player_nether::*}
+        loop {_regions_end::*}:
+            if loop-value partially match "owners.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {END}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_owner_player_end::*}
+            else if loop-value partially match "members.unique-ids":
+                set {_region::*} to yml list "regions.%loop-value%" from file {END}
+                if {_region::1} partially match {_playerUUID}:
+                    set {_regName::*} to split loop-value using "."
+                    add {_regName::1} to {_regions_member_player_end::*}
+        
+        message "&e%{_from}% &7migrate data:" to console
+        message "&7 - Score ticks: %{_played}%" to console
+        message "&7 - Permission homes: %{_homes}%" to console
+        message "&7 - Permission regions: %{_regions}%" to console
+        message "&7 - Balance: %{_money}%" to console
+        message "&7 - Score donate_money: %{_shekels}%" to console
+        message "&7 - Score donate_money_mined: %{_shekels_mined}%" to console
+        message "&7 - Score lp: %{_lp}%" to console
+        message "&7 - Parent group: %{_group}%" to console
+        message "&7 - Score keys: %{_keysDay}%" to console
+        message "&7 - Score keysEpic: %{_keysEpic}%" to console
+        message "&7 - Score keysEpic_stored: %{_keysEpicStored}%" to console
+        message "&7 - Score keysEpic_all: %{_keysEpicAll}%" to console
+        message "&7 - Score keysDay: %{_keysTimeDay}%" to console
+        message "&7 - Score streak: %{_streak}%" to console
+        message "&7 - Owner in world regions&7: %{_regions_owner_player_world::*}%" to console
+        message "&7 - Owner in nether regions&7: %{_regions_owner_player_nether::*}%" to console
+        message "&7 - Owner in end regions&7: %{_regions_owner_player_end::*}%" to console
+        message "&7 - Memeber in world regions&7: %{_regions_member_player_world::*}%" to console
+        message "&7 - Memeber in nether regions&7: %{_regions_member_player_nether::*}%" to console
+        message "&7 - Memeber in end regions&7: %{_regions_member_player_end::*}%" to console
+        message "&7[&eAvalon&7]: &fМиграция с &e%{_from}% &fна &e%{_to}% &fначата." to player
+    
+        execute console command "/scoreboard players set %{_to}% lp %{_lp}%"
+        execute console command "/scoreboard players add %{_to}% played %{_played}%"
+        execute console command "/scoreboard players add %{_to}% donate_money %{_shekels}%"
+        execute console command "/scoreboard players add %{_to}% donate_money_mined %{_shekels_mined}%"
+        execute console command "/scoreboard players add %{_to}% keys %{_keysDay}%"
+        execute console command "/scoreboard players add %{_to}% keysEpic %{_keysEpic}%"
+        execute console command "/scoreboard players add %{_to}% keysEpic_stored %{_keysEpicStored}%"
+        execute console command "/scoreboard players add %{_to}% keysEpic_all %{_keysEpicAll}%"
+        execute console command "/scoreboard players set %{_to}% keysDay %{_keysTimeDay}%"
+        execute console command "/scoreboard players set %{_to}% keysStreak %{_streak}%"
+        execute console command "/lp user %{_to}% parent set %{_group}%"
+        execute console command "/lp user %{_to}% permission set cmi.command.sethome.%{_homes}%"
+        execute console command "/lp user %{_to}% permission set wgrc.regionclaim.%{_regions}%"
+        execute console command "/cmi money give %{_to}% %{_money}%"
+    
+        execute console command "/scoreboard players set %{_from}% lp 1"
+        execute console command "/scoreboard players set %{_from}% played 0"
+        execute console command "/scoreboard players set %{_from}% donate_money 0"
+        execute console command "/scoreboard players set %{_from}% donate_money_mined 0"
+        execute console command "/scoreboard players set %{_from}% keys 0"
+        execute console command "/scoreboard players set %{_from}% keysEpic 0"
+        execute console command "/scoreboard players set %{_from}% keysEpic_stored 0"
+        execute console command "/scoreboard players set %{_from}% keysEpic_all 0"
+        execute console command "/scoreboard players set %{_from}% keysDay 0"
+        execute console command "/scoreboard players set %{_from}% keysStreak 0"
+        execute console command "/lp user %{_from}% parent set default"
+        execute console command "/lp user %{_from}% permission unset cmi.command.sethome.%{_homes}%"
+        execute console command "/lp user %{_from}% permission unset wgrc.regionclaim.%{_regions}%"
+        execute console command "/cmi money set %{_from}% 0"
+    
+        if {_regions_owner_player_world::*} is set:
+            loop {_regions_player_world::*}:
+                execute console command "/worldguard:rg addowner -w ""world"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removeowner -w ""world"" %loop-value% %{_from}%"
+        if {_regions_owner_player_nether::*} is set:
+            loop {_regions_player_nether::*}:
+                execute console command "/worldguard:rg addowner -w ""world_nether"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removeowner -w ""world_nether"" %loop-value% %{_from}%"
+        if {_regions_owner_player_end::*} is set:
+            loop {_regions_player_end::*}:
+                execute console command "/worldguard:rg addowner -w ""world_the_end"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removeowner -w ""world_the_end"" %loop-value% %{_from}%"
+    
+        if {_regions_member_player_world::*} is set:
+            loop {_regions_player_world::*}:
+                execute console command "/worldguard:rg addmember -w ""world"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removemember -w ""world"" %loop-value% %{_from}%"
+        if {_regions_member_player_nether::*} is set:
+            loop {_regions_player_nether::*}:
+                execute console command "/worldguard:rg addmember -w ""world_nether"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removemember -w ""world_nether"" %loop-value% %{_from}%"
+        if {_regions_member_player_end::*} is set:
+            loop {_regions_player_end::*}:
+                execute console command "/worldguard:rg addmember -w ""world_the_end"" %loop-value% %{_to}%"
+                execute console command "/worldguard:rg removemember -w ""world_the_end"" %loop-value% %{_from}%"
+        
+        message "&7[&eAvalon&7]: &fМиграция с &e%{_from}% &fна &e%{_to}% &fзавершена!" to console
+        

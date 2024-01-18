@@ -25,7 +25,7 @@ function altar(who: player, startLocation: location, altarBlocks: items, altarIn
             add 1 to {_i}
     return false
 
-on right click on gold block:
+on right click on gold block holding air:
     if {cooldown::%uuid of event-player%} > 0:
         cancel event
     else:
@@ -59,7 +59,7 @@ on right click on gold block:
                 message "&7[&cАлтарь тьмы&7]: Не хватает ресурсов! На постройку алтаря нужно 18 обсидиана, 2 алмазных блока, 5 грязи, золотой блок и 5 мёртвых кустов. Чтобы активировать аларь необходимо пожертвовать 10 редстоуна, 10 костей, 10 пороха и грибной суп." to event-player
         
 
-on right click on lapis block:
+on right click on lapis block holding air:
     if {cooldown::%uuid of event-player%} > 0:
         cancel event
     else:
