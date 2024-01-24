@@ -22,24 +22,36 @@ on placeholderapi placeholder request for the prefix "shop":
         set {_identifier} to identifier
         replace all "buy_" in {_identifier} with ""
         set {_item::*} to split {_identifier} using "_"
-        set {_result} to getBuyPrice({_item::1}, {_item::2} parsed as number)
+        set {_result} to getShop({_item::1}, "buy.%{_item::2}%")
         set the result to "%{_result}%"
     else if identifier start with "sell_":
         set {_identifier} to identifier
-        replace all "sell_" in {_identifier} with ""
+        replace all "buy_" in {_identifier} with ""
         set {_item::*} to split {_identifier} using "_"
-        set {_result} to getSellPrice({_item::1}, {_item::2} parsed as number)
+        set {_result} to getShop({_item::1}, "sell.%{_item::2}%")
         set the result to "%{_result}%"
-    else if identifier start with "diff_":
-        set {_identifier} to identifier
-        replace all "diff_" in {_identifier} with ""
-        set the result to getDiff({_identifier})
-    else if identifier start with "stock_":
-        set {_identifier} to identifier
-        replace all "stock_" in {_identifier} with ""
-        set {_item::*} to split {_identifier} using "_"
-        set {_result} to getShop({_item::1}, "stock") parsed as number / {_item::2} parsed as number
-        set the result to "%{_result}%"
+    # if identifier start with "buy_":
+    #     set {_identifier} to identifier
+    #     replace all "buy_" in {_identifier} with ""
+    #     set {_item::*} to split {_identifier} using "_"
+    #     set {_result} to getBuyPrice({_item::1}, {_item::2} parsed as number)
+    #     set the result to "%{_result}%"
+    # else if identifier start with "sell_":
+    #     set {_identifier} to identifier
+    #     replace all "sell_" in {_identifier} with ""
+    #     set {_item::*} to split {_identifier} using "_"
+    #     set {_result} to getSellPrice({_item::1}, {_item::2} parsed as number)
+    #     set the result to "%{_result}%"
+    # else if identifier start with "diff_":
+    #     set {_identifier} to identifier
+    #     replace all "diff_" in {_identifier} with ""
+    #     set the result to getDiff({_identifier})
+    # else if identifier start with "stock_":
+    #     set {_identifier} to identifier
+    #     replace all "stock_" in {_identifier} with ""
+    #     set {_item::*} to split {_identifier} using "_"
+    #     set {_result} to getShop({_item::1}, "stock") parsed as number / {_item::2} parsed as number
+    #     set the result to "%{_result}%"
 
 on placeholderapi placeholder request for the prefix "info":
     if identifier matches "chance":

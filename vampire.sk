@@ -105,12 +105,15 @@ every 1 minute:
                     apply darkness potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             else:
                 setSscore("%loop-player%", "vampire.vampire_mode", "vampire")
+                add "vampire" to the scoreboard tags of loop-player
         else if {_pMode} is "vampire":
             apply night vision potion of tier 1 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             apply hunger potion of tier 1 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             apply jump potion of tier 3 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             apply speed potion of tier 2 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
             apply water breathing of tier 2 without any particles whilst hiding the potion icon to the loop-player for 75 seconds replacing existing effect
+            if the loop-player don't have the scoreboard tag "vampire":
+                add "vampire" to the scoreboard tags of loop-player
 
 every 2 seconds:
     loop all players:
@@ -215,6 +218,8 @@ on consume:
             setSscore("%event-player%", "vampire.vampire_mode", "vampire")
         else if event-item is potion with custom model data 160004:
             setSscore("%event-player%", "vampire.vampire_mode", "cured")
+            remove "vampire" from the scoreboard tags of event-player
+            
     else:
         if event-item is potion with custom model data 160002:
             chance of 0.5:

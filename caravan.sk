@@ -8,7 +8,7 @@ on load:
         delete file "plugins\BetterGUI\menu\caravan.yml"
     create file "plugins\BetterGUI\menu\caravan.yml"
 
-    set {_menuStart::*} to "menu-settings:", "  name: '&0Караван (день -1)'", "  rows: 5", "  command: caravan", "  auto-refresh: 20", "fill:", "  slot: 0, 4, 8-9, 13, 17-18, 22, 26-39, 41-44", "  type: template","  template: blank"  , "close:", "  position-x: 5", "  position-y: 5", "  type: template", "  template: close"
+    set {_menuStart::*} to "menu-settings:", "  name: '&0Караван'", "  rows: 5", "  command: shop", "  auto-refresh: 20", "fill:", "  slot: 0, 4, 8-9, 13, 17-18, 22, 26-39, 41-44", "  type: template","  template: blank"  , "close:", "  position-x: 5", "  position-y: 5", "  type: template", "  template: close"
 
     set {_materials::*} to files in dir "plugins/Skript/scripts/shop"
 
@@ -21,8 +21,7 @@ on load:
         replace ".yml" in {_materialName} with ""
         set {_x} to ceil({_i} / 3)
         set {_y} to mod({_i}, 3)
-        message "%{_x}% %{_y}%"
-        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 1, {_y} + 1)
+        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 1, {_y} + 1, true)
         remove 1 from {_i}
 
     set {_i} to 9
@@ -34,7 +33,7 @@ on load:
         replace ".yml" in {_materialName} with ""
         set {_x} to ceil({_i} / 3)
         set {_y} to mod({_i}, 3)
-        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 5, {_y} + 1)
+        writeCaravanItemToFile("%{_materialName}%", "plugins\BetterGUI\menu\caravan.yml", {_x} + 5, {_y} + 1, false)
         remove 1 from {_i}
 
     set {_i} to size of {_menuStart::*}
@@ -44,14 +43,46 @@ on load:
     
     execute console command "reloadmenu"
 
-function writeCaravanItemToFile(item: string, file: string, posX: number, posY: number):
-    write "    - 'sound: UI_BUTTON_CLICK'" at line 1 to file {_file}
-    write "  command:" at line 1 to file {_file}
-    write "    - ''" at line 1 to file {_file}
-    write "  lore:" at line 1 to file {_file}
-    write "  id: %{_item}%" at line 1 to file {_file}
-    write "  position-x: %{_posX}%" at line 1 to file {_file}
+function getShop(item: string, identifier: string) :: string:
+    if yml {_identifier} in file "plugins/Skript/scripts/shop/%{_item}%.yml" doesn't exist:
+        return "0"
+    else:
+        set {_return} to yml value {_identifier} from file "plugins/Skript/scripts/shop/%{_item}%.yml"
+        return "%{_return}%"
+
+function setShop(item: string, identifier: string, value: object):
+    if file "plugins/Skript/scripts/shop/%{_item}%.yml" doesn't exist:
+        create file "plugins/Skript/scripts/shop/%{_item}%.yml"
+
+    set yml value {_identifier} from file "plugins/Skript/scripts/shop/%{_item}%.yml" to {_value}
+
+command /shop_modify <text> <text> <number>:
+    permission: group.admin
+    trigger:
+        if file "plugins/Skript/scripts/shop/%arg-2%.yml" doesn't exist:
+            create file "plugins/Skript/scripts/shop/%arg-2%.yml"
+        
+        set {_stock} to getShop(arg-2, "%arg-1%.stock") parsed as number
+        set {_total} to getShop(arg-2, "%arg-1%.total") parsed as number
+        setShop(arg-2, "%arg-1%.stock", {_stock} - arg-3)
+        setShop(arg-2, "%arg-1%.total", {_total} + arg-3)
+
+function writeCaravanItemToFile(item: string, file: string, posX: number, posY: number, isBuy: boolean):
+    if {_isBuy} is true:
+        set {_price} to getShop({_item}, "buy.price") parsed as number
+    else:
+        set {_price} to getShop({_item}, "sell.price") parsed as number
+    write "    price64: %{_price} * 64%"  at line 1 to file {_file}
+    write "    price: %{_price}%"  at line 1 to file {_file}
+    write "    id: '%{_item}%'"  at line 1 to file {_file}
+    write "  variable:" at line 1 to file {_file}
+    if {_isBuy} is true:
+        write "  template: 'caravan_buy'" at line 1 to file {_file}
+    else:
+        write "  template: 'caravan_sell'" at line 1 to file {_file}
+    write "  type: template" at line 1 to file {_file}
     write "  position-y: %{_posY}%" at line 1 to file {_file}
+    write "  position-x: %{_posX}%" at line 1 to file {_file}
     write "%{_item}%%{_posX}%%{_posY}%:" at line 1 to file {_file}
     remove 1 from {_i}
     wait 1 tick
