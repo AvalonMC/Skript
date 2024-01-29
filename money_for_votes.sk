@@ -55,12 +55,11 @@ command /monitoring_votes:
         
         set {_chanceDiff} to {chance} - getSscore("##server", "monitoring.chance") parsed as number
 
-        if {_chanceDiff} >= 0.01:
-            execute console command "/sscore set number ##server monitoring.votes %{votes}%"
-            execute console command "/sscore set number ##server monitoring.today %{today}%"
-            execute console command "/sscore set number ##server monitoring.diff %{votesDiff}%"
-            execute console command "/sscore set number ##server monitoring.place %{place}%"
-            execute console command "/sscore set number ##server monitoring.chance %{chance}%"
+        execute console command "/sscore set number ##server monitoring.votes %{votes}%"
+        execute console command "/sscore set number ##server monitoring.today %{today}%"
+        execute console command "/sscore set number ##server monitoring.diff %{votesDiff}%"
+        execute console command "/sscore set number ##server monitoring.place %{place}%"
+        execute console command "/sscore set number ##server monitoring.chance %{chance}%"
         
-        if {_chanceDiff} > 0.01:
+        if {_chanceDiff} >= 0.01:
             send action bar with text "&7Шанс выпадения &3₪ &7увеличен на &e%{_chanceDiff}%%%&7" to players
