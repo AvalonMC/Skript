@@ -1,0 +1,17 @@
+on break of diamond ore or deepslate diamond ore:
+    if event-player's tool is a pickaxe:
+        if event-player's tool is enchanted with fortune:
+            chance of {chance}%:
+                set {_xPos} to x of vector of event-block
+                set {_yPos} to y of vector of event-block
+                set {_zPos} to z of vector of event-block
+                execute console command "/scoreboard players add %event-player% donate_money 1"
+                execute console command "/scoreboard players add %event-player% donate_money_mined 1"
+                execute console command "/scoreboard players add ##server donate_money_mined 1"
+                play sound "entity.allay.ambient_with_item" to the event-player
+                loop 50 times:
+                    show end rod at location of event-block ~ vector(random number between -0.5 and 0.5, random number between -0.5 and 0.5, random number between -0.5 and 0.5) to the event-player
+                send actionbar "&7Ты получил &31 ₪&7!" to event-player
+                #execute console command "/playsound minecraft:entity.allay.ambient_with_item block %event-player% %{_xPos} - 0.5% %{_yPos} - 0.5% %{_zPos} - 0.5% 25 0.2"
+                #execute console command "/particle firework %{_xPos} - 0.5% %{_yPos} - 0.5% %{_zPos} - 0.5% 0 0 0 0.1 100 normal"
+                #execute console command "/title @s actionbar [{""text"":""Ты получил "",""color"":""gray""},{""text"":""1 ₪"",""color"":""dark_aqua""}]"
